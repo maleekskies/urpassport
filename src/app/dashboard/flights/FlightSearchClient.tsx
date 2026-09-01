@@ -151,7 +151,7 @@ export function FlightSearchClient({
             const held = heldIds.has(offer.id);
             return (
               <div key={offer.id} className="flex items-center justify-between p-5 flex-wrap gap-3">
-                <div>
+                <div className="min-w-0">
                   <div className="font-semibold text-sm">
                     {seg?.departure.iataCode} → {lastSeg?.arrival.iataCode}
                   </div>
@@ -160,14 +160,14 @@ export function FlightSearchClient({
                     {offer.itineraries.length > 1 ? " · round trip" : " · one way"}
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="font-display text-lg font-bold">
+                <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+                  <div className="font-display text-lg font-bold whitespace-nowrap">
                     {offer.price.currency} {Number(offer.price.total).toLocaleString()}
                   </div>
                   <button
                     onClick={() => handleHold(offer)}
                     disabled={held || isPending}
-                    className="border border-green-deep text-green-deep hover:bg-green-pale transition-colors font-semibold text-xs px-4 py-2 rounded-md disabled:opacity-60"
+                    className="border border-green-deep text-green-deep hover:bg-green-pale transition-colors font-semibold text-xs px-4 py-2 rounded-md disabled:opacity-60 whitespace-nowrap"
                   >
                     {held ? "Held ✓" : "Hold this fare"}
                   </button>
@@ -182,9 +182,9 @@ export function FlightSearchClient({
         <div className="bg-panel border border-line rounded-lg p-6">
           <h2 className="font-display text-lg mb-4">Recently held</h2>
           {recentBookings.map((b) => (
-            <div key={b.id} className="flex justify-between items-center py-2.5 border-b border-line last:border-0 text-sm">
-              <span>{b.origin} → {b.destination} · {b.depart_date}</span>
-              <span className="font-mono text-ink-soft">{b.price_ngn ? `₦${Number(b.price_ngn).toLocaleString()}` : ""} · {b.status}</span>
+            <div key={b.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-0.5 sm:gap-2 py-2.5 border-b border-line last:border-0 text-sm">
+              <span className="min-w-0">{b.origin} → {b.destination} · {b.depart_date}</span>
+              <span className="font-mono text-ink-soft text-xs sm:text-sm flex-shrink-0">{b.price_ngn ? `₦${Number(b.price_ngn).toLocaleString()}` : ""} · {b.status}</span>
             </div>
           ))}
         </div>

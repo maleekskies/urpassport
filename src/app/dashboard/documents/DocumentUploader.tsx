@@ -52,7 +52,7 @@ export function DocumentUploader({ userId }: { userId: string }) {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3 gap-y-2 mb-3 flex-wrap">
         <label className="text-xs font-semibold text-ink-soft">Category:</label>
         <select
           value={docType}
@@ -65,7 +65,7 @@ export function DocumentUploader({ userId }: { userId: string }) {
             </option>
           ))}
         </select>
-        <label className="text-xs font-semibold text-ink-soft ml-2">Expires (optional):</label>
+        <label className="text-xs font-semibold text-ink-soft sm:ml-2">Expires (optional):</label>
         <input
           type="date"
           value={expiryDate}

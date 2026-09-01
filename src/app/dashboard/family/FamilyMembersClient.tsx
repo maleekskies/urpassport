@@ -69,15 +69,15 @@ export function FamilyMembersClient({ members }: { members: FamilyMember[] }) {
           </p>
         )}
         {members.map((m) => (
-          <div key={m.id} className="flex justify-between items-start py-3.5 border-b border-line last:border-0">
-            <div>
+          <div key={m.id} className="flex justify-between items-start gap-3 flex-wrap py-3.5 border-b border-line last:border-0">
+            <div className="min-w-0">
               <div className="font-semibold text-sm">{m.full_name}</div>
               <div className="text-ink-soft text-xs mt-0.5">
                 {[m.relationship, m.date_of_birth].filter(Boolean).join(" · ")}
               </div>
               {m.notes && <div className="text-ink-faint text-xs mt-0.5">{m.notes}</div>}
             </div>
-            <button onClick={() => handleRemove(m.id)} disabled={isPending} className="text-red text-xs font-semibold">
+            <button onClick={() => handleRemove(m.id)} disabled={isPending} className="text-red text-xs font-semibold flex-shrink-0">
               Remove
             </button>
           </div>

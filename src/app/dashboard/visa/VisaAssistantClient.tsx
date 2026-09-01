@@ -161,13 +161,13 @@ export function VisaAssistantClient({
                 setSelectedSubtype("tourist");
                 setAnswers({});
               }}
-              className={`flex justify-between items-center px-4 py-2.5 border-b border-line last:border-0 text-sm font-medium cursor-pointer
+              className={`flex justify-between items-center gap-2 flex-wrap px-4 py-2.5 border-b border-line last:border-0 text-sm font-medium cursor-pointer
               ${c === selected ? "bg-green-deep text-white font-bold" : "text-ink-soft hover:bg-green-pale hover:text-green-deep"}`}
             >
               {c}
               {FULL_DATA[c] && (
                 <span
-                  className={`text-[9.5px] font-mono uppercase px-2 py-0.5 rounded-full ${
+                  className={`text-[9.5px] font-mono uppercase px-2 py-0.5 rounded-full flex-shrink-0 ${
                     c === selected ? "bg-gold text-navy" : "bg-gold-soft text-[#7a5c1a]"
                   }`}
                 >
@@ -222,7 +222,7 @@ export function VisaAssistantClient({
           )}
           {!liveLoading && liveData && liveData.available && (
             <div
-              className={`rounded-md px-4.5 py-3.5 text-sm flex items-center gap-3 ${
+              className={`rounded-md px-4.5 py-3.5 text-sm flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 ${
                 liveData.color === "green"
                   ? "bg-green-pale text-green-deep"
                   : liveData.color === "red"

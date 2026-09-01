@@ -70,9 +70,9 @@ export function BillingPanel({
           <div className="border-t border-line pt-4">
             <div className="text-xs font-semibold text-ink-soft mb-2">Payment history</div>
             {payments.map((p) => (
-              <div key={p.id} className="flex justify-between items-center py-2 text-sm border-b border-line last:border-0">
-                <span>{p.purpose}</span>
-                <span className="font-mono text-ink-soft">
+              <div key={p.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-0.5 sm:gap-2 py-2 text-sm border-b border-line last:border-0">
+                <span className="min-w-0">{p.purpose}</span>
+                <span className="font-mono text-ink-soft text-xs sm:text-sm flex-shrink-0">
                   ₦{Number(p.amount).toLocaleString()} · {p.status}
                 </span>
               </div>
