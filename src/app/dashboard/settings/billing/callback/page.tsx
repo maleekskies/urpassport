@@ -1,6 +1,16 @@
 import Link from "next/link";
 import { verifyPayment } from "../../actions";
 
+// This page must never be statically evaluated: verifyPayment() reads the
+// user's session via cookies(), and that call happens inside a try/catch
+// below. If Next attempts a static-render pass at build time, its internal
+// "this page needs dynamic rendering" signal gets thrown from inside that
+// try/catch and our catch swallows it — which surfaces as an opaque
+// "Failed to collect page data" build error instead of Next just marking
+// the route dynamic. Forcing dynamic rendering here skips that pass
+// entirely, so the signal never needs to fire.
+export const dynamic = "force-dynamic";
+
 export default async function BillingCallbackPage({
   searchParams,
 }: {
