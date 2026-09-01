@@ -5,14 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import type { Database } from "@/lib/database.types";
 import { initializeTransaction, verifyTransaction } from "@/lib/paystack";
-
-// Fixed price list for the things this app currently lets users pay for.
-// Kept server-side so the client can never submit an arbitrary amount.
-export const BILLABLE_ITEMS: Record<string, { label: string; amountNaira: number }> = {
-  document_review: { label: "Priority document review", amountNaira: 5000 },
-  visa_guide_unlock: { label: "Full researched guide unlock (non-Live-Guide country)", amountNaira: 2500 },
-  application_fast_track: { label: "Application fast-track support", amountNaira: 15000 },
-};
+import { BILLABLE_ITEMS } from "@/lib/billing";
 
 export async function initializePayment(purposeKey: string) {
   const user = await requireUser();

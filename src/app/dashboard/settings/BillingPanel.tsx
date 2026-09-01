@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { initializePayment, setEmailReminders, BILLABLE_ITEMS } from "./actions";
+import { initializePayment, setEmailReminders } from "./actions";
+import { BILLABLE_ITEMS } from "@/lib/billing";
 
 interface PaymentRow {
   id: string;
