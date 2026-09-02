@@ -22,13 +22,13 @@ export default function LoginPage() {
     setNotice(null);
     setLoading(true);
 
-    // Created here, not at component top: this runs only on user
-    // interaction, in the browser. Constructing it during render would run
-    // during Next's build-time prerender pass too, with no browser and
-    // no guarantee the env vars are available at that exact moment.
-    const supabase = createClient();
-
     try {
+      // Created here, not at component top: this runs only on user
+      // interaction, in the browser. Constructing it during render would run
+      // during Next's build-time prerender pass too, with no browser and
+      // no guarantee the env vars are available at that exact moment.
+      const supabase = createClient();
+
       if (mode === "forgot") {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/auth/reset-password`,
@@ -65,12 +65,16 @@ export default function LoginPage() {
 
   async function handleGoogle() {
     setError(null);
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
-    });
-    if (error) setError(error.message);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/auth/callback` },
+      });
+      if (error) setError(error.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't sign you in with Google.");
+    }
   }
 
   return (
