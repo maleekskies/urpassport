@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { FamilyMembersClient } from "./FamilyMembersClient";
+
+export const metadata: Metadata = {
+  title: "Family",
+  description: "Manage passport and visa applications on behalf of dependants.",
+};
 
 export default async function FamilyPage() {
   const user = await requireUser();

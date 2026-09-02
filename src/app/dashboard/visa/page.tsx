@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { VisaAssistantClient } from "./VisaAssistantClient";
+
+export const metadata: Metadata = {
+  title: "Visa Assistant",
+  description: "Visa requirements and application tracking for any destination country.",
+};
 
 export default async function VisaPage() {
   const user = await requireUser();
@@ -25,7 +31,7 @@ export default async function VisaPage() {
       <div className="text-xs font-mono text-ink-faint mb-2">Dashboard / Visa Assistant</div>
       <h1 className="font-display text-2xl mb-1">Visa Assistant</h1>
       <p className="text-ink-soft text-sm mb-6">
-        Pick any country — we&rsquo;ll show you exactly what your case needs.
+        Pick any country. We&rsquo;ll show you exactly what your case needs.
       </p>
       <VisaAssistantClient
         applicationTypes={(applicationTypes as any) || []}

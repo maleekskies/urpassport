@@ -1,4 +1,4 @@
--- UrPassport NG — initial schema + RLS
+-- UrPassport NG: initial schema + RLS
 -- Run this in the Supabase SQL Editor, or via `supabase db push` if you're
 -- using the Supabase CLI locally.
 
@@ -130,7 +130,7 @@ create index if not exists idx_itineraries_user on itineraries(user_id);
 create index if not exists idx_bookings_user on bookings(user_id);
 
 -- ========== ROW-LEVEL SECURITY ==========
--- application_types is public reference content (no user_id) — readable by
+-- application_types is public reference content (no user_id), readable by
 -- anyone signed in, writable only via the Supabase dashboard/service role.
 alter table users enable row level security;
 alter table application_types enable row level security;

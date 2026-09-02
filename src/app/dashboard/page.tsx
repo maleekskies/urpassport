@@ -1,6 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import type { ApplicationTypeRow } from "@/lib/database.types";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Your passport and visa applications in one place.",
+};
 
 const STATUS_STYLES: Record<string, string> = {
   on_track: "bg-green-pale text-green-mid",
@@ -46,7 +52,7 @@ export default async function DashboardPage() {
     .select("id", { count: "exact", head: true })
     .eq("user_id", user!.id);
 
-  // application_types is reference content — fetch the ones actually referenced
+  // application_types is reference content: fetch the ones actually referenced
   let typesById: Record<string, ApplicationTypeRow> = {};
   if (applications && applications.length > 0) {
     const typeIds = [...new Set(applications.map((a) => a.application_type_id))];
@@ -96,7 +102,7 @@ export default async function DashboardPage() {
             {!applications || applications.length === 0 ? (
               <div className="text-center py-10">
                 <p className="text-ink-soft text-sm mb-4">
-                  No applications yet — start your Nigerian passport renewal or a visa application to
+                  No applications yet. Start your Nigerian passport renewal or a visa application to
                   see it tracked here.
                 </p>
                 <Link

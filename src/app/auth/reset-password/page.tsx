@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 
 // Reached from the link in the "reset your password" email. Supabase's
 // client SDK reads the recovery token straight out of the URL and
-// establishes a session automatically — this page just needs to show a
+// establishes a session automatically. This page just needs to show a
 // "set new password" form and call updateUser once the person submits it.
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -45,7 +45,7 @@ export default function ResetPasswordPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Couldn't reset your password. The link may have expired — request a new one."
+          : "Couldn't reset your password. The link may have expired. Request a new one."
       );
     } finally {
       setLoading(false);

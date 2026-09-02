@@ -21,7 +21,7 @@ interface Booking {
   created_at: string;
 }
 
-// Airports for the 4 "Live Guide" visa destinations — enough to power the
+// Airports for the 4 "Live Guide" visa destinations, enough to power the
 // visa-linked banner without needing a full IATA-to-country database.
 const AIRPORT_TO_DEST: Record<string, string> = {
   LHR: "UK", LGW: "UK", MAN: "UK", STN: "UK", LTN: "UK",
@@ -41,7 +41,7 @@ export function FlightSearchClient({
   const [destination, setDestination] = useState("LHR");
   const [departDate, setDepartDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
-  const [adults, setAdults] = useState(1);
+  const [adults] = useState(1);
   const [offers, setOffers] = useState<FlightOffer[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -98,7 +98,7 @@ export function FlightSearchClient({
               <strong>{linkedVisaApp.displayName}</strong> is {linkedVisaApp.completionPercent}% complete
               ({linkedVisaApp.status.replace("_", " ")}).{" "}
               {linkedVisaApp.completionPercent >= 100
-                ? "You're set on documents — safe to look at dates."
+                ? "You're set on documents: safe to look at dates."
                 : "Finish your checklist before booking anything non-refundable."}
             </>
           ) : (
@@ -140,7 +140,7 @@ export function FlightSearchClient({
       {error && <div className="bg-red-soft text-red rounded-md px-4 py-3 text-sm mb-6">⚠ {error}</div>}
 
       {offers && offers.length === 0 && !error && (
-        <div className="text-ink-soft text-sm mb-6">No fares found for those dates — try adjusting them.</div>
+        <div className="text-ink-soft text-sm mb-6">No fares found for those dates. Try adjusting them.</div>
       )}
 
       {offers && offers.length > 0 && (

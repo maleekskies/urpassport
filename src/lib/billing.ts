@@ -1,4 +1,4 @@
-// Plain data — NOT in a "use server" file. Next.js only allows async
+// Plain data: NOT in a "use server" file. Next.js only allows async
 // function exports from "use server" files (see settings/actions.ts), so
 // this constant lives here and gets imported by both the server action and
 // the client component that renders it.

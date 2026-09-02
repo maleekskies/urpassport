@@ -1,4 +1,4 @@
-// Paystack integration — server-only. Never expose PAYSTACK_SECRET_KEY to
+// Paystack integration: server-only. Never expose PAYSTACK_SECRET_KEY to
 // the client; NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY is the only key allowed there
 // (unused server-side, kept for a future client-side inline-checkout option).
 
@@ -80,7 +80,7 @@ export async function verifyTransaction(reference: string): Promise<VerifyResult
   };
 }
 
-// Verifies the `x-paystack-signature` header on incoming webhooks —
+// Verifies the `x-paystack-signature` header on incoming webhooks:
 // HMAC-SHA512 of the raw request body, keyed with the secret key.
 export async function verifyWebhookSignature(rawBody: string, signature: string | null): Promise<boolean> {
   if (!signature) return false;

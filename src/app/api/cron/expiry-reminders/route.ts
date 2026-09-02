@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { sendEmail } from "@/lib/resend";
 
-// Scheduled route — point a daily cron (Vercel Cron, Supabase Cron, GitHub
+// Scheduled route: point a daily cron (Vercel Cron, Supabase Cron, GitHub
 // Actions, etc.) at this URL with `Authorization: Bearer <CRON_SECRET>`.
 // Vercel Cron example (vercel.json):
 //   { "crons": [{ "path": "/api/cron/expiry-reminders", "schedule": "0 7 * * *" }] }

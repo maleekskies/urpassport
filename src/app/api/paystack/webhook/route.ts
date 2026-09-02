@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/paystack";
 import { createServiceClient } from "@/lib/supabase/service";
 
-// Paystack webhook — configure this URL (https://yourdomain.com/api/paystack/webhook)
+// Paystack webhook: configure this URL (https://yourdomain.com/api/paystack/webhook)
 // in the Paystack dashboard under Settings > API Keys & Webhooks. This is the
 // source of truth for payment status; the /billing/callback page is just a
 // friendlier fallback for the redirect-back UX.

@@ -1,12 +1,12 @@
 // Live visa-requirements lookups via the Travel Buddy Visa Requirements API
 // (RapidAPI: visa-requirement.p.rapidapi.com). Free tier, 200 passports x
 // 211 destinations, updated daily. Replaces the old "generic guidance"
-// fallback — every non-Live-Guide country now gets real, current data
+// fallback: every non-Live-Guide country now gets real, current data
 // instead of static filler text, and results are cached in
 // `visa_requirements_cache` so repeat lookups don't re-hit the API.
 //
 // If RAPIDAPI_KEY isn't configured, callers get an explicit
-// { available: false } result — never fabricated content standing in for it.
+// { available: false } result, never fabricated content standing in for it.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/database.types";
@@ -45,7 +45,7 @@ export async function getLiveVisaRequirement(
     return { ...(cached.data as object as LiveVisaResult), source: "cache", fetchedAt: cached.fetched_at };
   }
 
-  // 2. Cache miss / expired — call the live API.
+  // 2. Cache miss / expired: call the live API.
   if (!process.env.RAPIDAPI_KEY) {
     // Serve stale cache rather than nothing, if we have it.
     if (cached) {
@@ -94,7 +94,7 @@ export async function getLiveVisaRequirement(
       fetchedAt: new Date().toISOString(),
     };
 
-    // 3. Write through to cache (best-effort — don't fail the request if this fails).
+    // 3. Write through to cache (best-effort, don't fail the request if this fails).
     await supabase.from("visa_requirements_cache").upsert(
       {
         passport_code: passportCode,

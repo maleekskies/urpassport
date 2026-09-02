@@ -1,9 +1,9 @@
-// Amadeus Self-Service API client — OAuth2 client-credentials flow +
+// Amadeus Self-Service API client: OAuth2 client-credentials flow +
 // Flight Offers Search. Uses the "test" environment by default (free,
 // self-serve keys at developers.amadeus.com); set AMADEUS_ENV=production
 // once you have a production contract.
 //
-// Real API calls, no SDK — matches this project's existing convention of
+// Real API calls, no SDK, matches this project's existing convention of
 // calling providers directly via fetch (see planner/actions.ts).
 
 const BASE_URLS = {
@@ -94,21 +94,4 @@ export async function searchFlights(input: FlightSearchInput): Promise<FlightOff
 
   const json = await res.json();
   return (json.data || []) as FlightOffer[];
-}
-
-// Basic airport/city code lookup — helps users type "Lagos" and get "LOS".
-export async function searchAirports(keyword: string) {
-  const token = await getAccessToken();
-  const params = new URLSearchParams({
-    subType: "AIRPORT,CITY",
-    keyword,
-    "page[limit]": "6",
-  });
-  const res = await fetch(`${baseUrl()}/v1/reference-data/locations?${params.toString()}`, {
-    headers: { Authorization: `Bearer ${token}` },
-    signal: AbortSignal.timeout(8000),
-  });
-  if (!res.ok) return [];
-  const json = await res.json();
-  return (json.data || []) as { iataCode: string; name: string; address?: { cityName?: string; countryName?: string } }[];
 }

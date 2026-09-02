@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { ProfileForm } from "./ProfileForm";
 import { BillingPanel } from "./BillingPanel";
+
+export const metadata: Metadata = {
+  title: "Settings",
+  description: "Manage your profile, billing, and notification preferences.",
+};
 
 export default async function SettingsPage() {
   const user = await requireUser();

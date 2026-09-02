@@ -11,7 +11,7 @@ values
   'passport', null, null, 'Nigerian Passport Renewal',
   200000, 'NGN', 15, 42,
   '[
-    {"key":"old_passport","label":"Current (old) passport","description":"Required for renewal — presented at biometrics for cancellation.","required":true},
+    {"key":"old_passport","label":"Current (old) passport","description":"Required for renewal, presented at biometrics for cancellation.","required":true},
     {"key":"nin_slip","label":"Valid NIN slip","description":"Must match your application name exactly.","required":true},
     {"key":"secondary_id","label":"Secondary ID","description":"National ID card, voter''s card, or driver''s licence.","required":true},
     {"key":"lga_letter","label":"Local Government identification letter","description":"Confirms your state and LGA of origin.","required":true},
@@ -23,7 +23,7 @@ values
     {"step_number":2,"title":"Enter NIN & personal details","description":"System auto-pulls NIMC data."},
     {"step_number":3,"title":"Choose passport type","description":"32 or 64 page."},
     {"step_number":4,"title":"Upload documents","description":"All required documents."},
-    {"step_number":5,"title":"Pay on portal","description":"Official portal only — never a third party."},
+    {"step_number":5,"title":"Pay on portal","description":"Official portal only, never a third party."},
     {"step_number":6,"title":"Book biometrics","description":"Print payment + acknowledgment slips."},
     {"step_number":7,"title":"Attend biometrics","description":"Bring original documents."},
     {"step_number":8,"title":"Track enrollment","description":"track.immigration.gov.ng"},
@@ -50,7 +50,7 @@ values
     {"step_number":4,"title":"Attend VFS appointment","description":"Lagos or Abuja."},
     {"step_number":5,"title":"Decision","description":"Typically within 15 days."}
   ]',
-  '["Any mismatch between form and documents.","Weak or unclear ties to Nigeria.","Thin or unexplained bank activity.","Visa valid 6 months from issue — must be used within that window."]',
+  '["Any mismatch between form and documents.","Weak or unclear ties to Nigeria.","Thin or unexplained bank activity.","Visa valid 6 months from issue: must be used within that window."]',
   '2026-08-01'
 ),
 (
@@ -88,7 +88,7 @@ values
   '[
     {"step_number":1,"title":"Apply online","description":"Through IRCC."},
     {"step_number":2,"title":"Pay & get BIL","description":"Biometric Instruction Letter."},
-    {"step_number":3,"title":"Book biometrics","description":"VFS Global — book immediately, slots fill fast."},
+    {"step_number":3,"title":"Book biometrics","description":"VFS Global: book immediately, slots fill fast."},
     {"step_number":4,"title":"IRCC processing","description":"After biometrics on file."},
     {"step_number":5,"title":"Passport submission & stamping","description":"If a Passport Acceptance Letter is issued."}
   ]',
@@ -101,13 +101,13 @@ values
   '[
     {"key":"passport","label":"Nigerian passport, 6+ months validity","description":"Clear scan of biodata + relevant pages.","required":true},
     {"key":"photo","label":"Recent front-facing photo","description":"","required":true},
-    {"key":"dvn","label":"Document Verification Number (DVN)","description":"From documentverificationhub.ae — required first.","required":true},
+    {"key":"dvn","label":"Document Verification Number (DVN)","description":"From documentverificationhub.ae, required first.","required":true},
     {"key":"bank","label":"6-month bank statement","description":"","required":true},
     {"key":"hotel","label":"Hotel booking confirmation","description":"","required":true},
     {"key":"flight","label":"Flight itinerary","description":"","required":true}
   ]',
   '[
-    {"step_number":1,"title":"Get DVN","description":"Document Verification Hub — required before anything else."},
+    {"step_number":1,"title":"Get DVN","description":"Document Verification Hub, required before anything else."},
     {"step_number":2,"title":"Submit visa application","description":"With DVN and documents."},
     {"step_number":3,"title":"Pay visa fee","description":"Varies by duration/entry type."},
     {"step_number":4,"title":"Processing","description":"3-10 working days."},

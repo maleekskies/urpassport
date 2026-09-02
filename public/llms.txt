@@ -1,0 +1,29 @@
+# UrPassport NG
+
+UrPassport NG is a web app that helps Nigerians handle passport renewal, visa
+applications, flight search, and trip planning from one account.
+
+## What it does
+
+- Passport Hub: tracks a Nigerian passport renewal against a document
+  checklist, plus a client-side NIN match checker that never sends the NIN
+  anywhere.
+- Visa Assistant: covers all 193 countries. Four (UK, US, Canada, UAE) have
+  fully researched guides with a saved, trackable application. The rest pull
+  live visa-requirement status from a third-party API.
+- Document Vault: private, per-user file storage for travel documents, with
+  expiry-date tracking and reminder emails.
+- Flights: real flight search and fare holding via the Amadeus API.
+- AI Trip Planner: generates a day-by-day itinerary from a destination,
+  dates, and budget.
+- Billing: Paystack checkout for a small set of paid add-ons.
+- Family: manage passport/visa applications on behalf of dependants.
+
+## Access
+
+Everything past the homepage and login requires a Supabase-authenticated
+account. There is no public API.
+
+## Contact
+
+Not affiliated with the Nigeria Immigration Service or any government body.

@@ -42,7 +42,7 @@ export function DocumentList({ documents }: { documents: DocRow[] }) {
   if (documents.length === 0) {
     return (
       <p className="text-ink-soft text-sm text-center py-8">
-        No documents uploaded yet — use the box above to add your first one.
+        No documents uploaded yet. Use the box above to add your first one.
       </p>
     );
   }

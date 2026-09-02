@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { FlightSearchClient } from "./FlightSearchClient";
+
+export const metadata: Metadata = {
+  title: "Flights",
+  description: "Search real fares and hold the ones worth planning around.",
+};
 
 export default async function FlightsPage() {
   const user = await requireUser();
@@ -37,7 +43,7 @@ export default async function FlightsPage() {
       <div className="text-xs font-mono text-ink-faint mb-2">Dashboard / Flights</div>
       <h1 className="font-display text-2xl mb-1">Flights</h1>
       <p className="text-ink-soft text-sm mb-6">
-        Search real fares and hold the ones worth planning around — powered by Amadeus.
+        Search real fares and hold the ones worth planning around (powered by Amadeus).
       </p>
       <FlightSearchClient visaApplications={visaApplications} recentBookings={recentBookings || []} />
     </div>

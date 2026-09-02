@@ -1,7 +1,7 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/database.types";
 
-// Service-role client for contexts with no user session — webhooks and cron
+// Service-role client for contexts with no user session: webhooks and cron
 // routes. Bypasses RLS entirely, so it must never be imported into anything
 // that runs with user input controlling *which* rows get touched without an
 // explicit ownership check first (see the webhook/cron routes for the

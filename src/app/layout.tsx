@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter, Space_Mono } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -20,10 +21,27 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
 });
 
+const title = "UrPassport NG: One Stop From Here to There";
+const description =
+  "Passport guidance, visa clarity, flight search and AI trip planning, built for how Nigerians actually travel.";
+
 export const metadata: Metadata = {
-  title: "UrPassport NG — One Stop From Here to There",
-  description:
-    "Passport guidance, visa clarity, flight search and AI trip planning, built for how Nigerians actually travel.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: title, template: "%s | UrPassport NG" },
+  description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title,
+    description,
+    url: SITE_URL,
+    siteName: "UrPassport NG",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 
 // Called after the browser has already uploaded the file straight to
-// Supabase Storage (see DocumentUploader.tsx) — this just records the
+// Supabase Storage (see DocumentUploader.tsx), this just records the
 // metadata row so it shows up in the vault list.
 export async function recordDocument(input: {
   documentType: string;

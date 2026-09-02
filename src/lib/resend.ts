@@ -1,4 +1,4 @@
-// Minimal Resend client — one function, plain fetch, matches this project's
+// Minimal Resend client: one function, plain fetch, matches this project's
 // convention of calling providers directly rather than pulling in an SDK.
 
 export async function sendEmail(input: { to: string; subject: string; html: string }) {

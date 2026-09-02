@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { PlannerForm } from "./PlannerForm";
 import { ItineraryView } from "./ItineraryView";
+
+export const metadata: Metadata = {
+  title: "AI Trip Planner",
+  description: "Generate a day-by-day trip itinerary from your destination, dates, and budget.",
+};
 
 export default async function PlannerPage() {
   const user = await requireUser();
@@ -36,7 +42,7 @@ export default async function PlannerPage() {
 
       {(!itineraries || itineraries.length === 0) && (
         <p className="text-ink-soft text-sm text-center py-8">
-          No itineraries yet — fill in the form above and generate your first one.
+          No itineraries yet. Fill in the form above and generate your first one.
         </p>
       )}
 

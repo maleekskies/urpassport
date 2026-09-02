@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { startPassportApplication } from "./actions";
 import { PassportChecklist } from "./PassportChecklist";
 import { StartApplicationButton } from "@/components/StartApplicationButton";
 import { NinChecker } from "./NinChecker";
+
+export const metadata: Metadata = {
+  title: "Passport Hub",
+  description: "Track your Nigerian passport renewal and check your NIN against your bio-data.",
+};
 
 export default async function PassportPage() {
   const user = await requireUser();
@@ -72,7 +78,7 @@ export default async function PassportPage() {
             <h2 className="font-display text-lg mb-1">NIN Match Checker</h2>
             <p className="text-ink-soft text-sm mb-4">
               Your application name must match your NIN record exactly. Check both against each
-              other below — this runs entirely in your browser; nothing is sent anywhere.
+              other below, this runs entirely in your browser; nothing is sent anywhere.
             </p>
             <NinChecker />
           </div>

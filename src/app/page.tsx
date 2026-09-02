@@ -39,7 +39,7 @@ export default function LandingPage() {
           <em className="italic text-green-deep">the boarding gate.</em>
         </h1>
         <p className="text-lg text-ink-soft max-w-lg mt-6 mb-8">
-          Your passport, your visa documents, your flights and your itinerary — tracked in one
+          Your passport, your visa documents, your flights and your itinerary, tracked in one
           dashboard, built around how Nigerians actually apply, pay, and travel.
         </p>
         <div className="flex gap-4 flex-wrap">
@@ -66,11 +66,11 @@ export default function LandingPage() {
           <h2 className="font-display text-3xl mb-10">Six modules. One dashboard.</h2>
           <div className="grid md:grid-cols-3 gap-5">
             {[
-              ["Passport Hub", "The full NIS journey — checklist, NIN-match check, status tracking."],
+              ["Passport Hub", "The full NIS journey: checklist, NIN-match check, status tracking."],
               ["Visa Assistant", "Exact document lists for UK, US, Canada and UAE."],
               ["AI Trip Planner", "A day-by-day plan with flights, stays, and reminders attached."],
               ["Flight Search", "Routes from Lagos, Abuja and Port Harcourt, priced in Naira."],
-              ["Document Vault", "Encrypted storage — upload once, reuse everywhere."],
+              ["Document Vault", "Encrypted storage: upload once, reuse everywhere."],
               ["Dashboard", "Every application and booking, with real progress."],
             ].map(([title, desc]) => (
               <div key={title} className="bg-white/5 border border-white/15 rounded-md p-6">
@@ -103,7 +103,7 @@ export default function LandingPage() {
 
       <footer className="border-t border-line py-10">
         <div className="max-w-[1180px] mx-auto px-7 text-xs text-ink-soft font-mono">
-          © 2026 UrPassport NG — Not affiliated with the Nigeria Immigration Service.
+          © 2026 UrPassport NG. Not affiliated with the Nigeria Immigration Service.
         </div>
       </footer>
     </div>

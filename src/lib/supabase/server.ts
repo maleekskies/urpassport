@@ -20,7 +20,7 @@ export function createClient() {
           try {
             cookieStore.set({ name, value, ...options });
           } catch {
-            // Called from a Server Component — middleware handles the
+            // Called from a Server Component, middleware handles the
             // actual session refresh, so this can be safely ignored.
           }
         },
@@ -28,7 +28,7 @@ export function createClient() {
           try {
             cookieStore.set({ name, value: "", ...options });
           } catch {
-            // Same as above — safe to ignore outside a Server Action/Route Handler.
+            // Same as above: safe to ignore outside a Server Action/Route Handler.
           }
         },
       },

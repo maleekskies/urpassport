@@ -25,7 +25,7 @@ export async function runFlightSearch(input: FlightSearchInput): Promise<FlightS
   }
 }
 
-// Saves a chosen offer as a "held" booking row — a lightweight save, not a
+// Saves a chosen offer as a "held" booking row, a lightweight save, not a
 // real ticket purchase (that would require Amadeus's paid booking flow).
 export async function holdFlightOffer(input: {
   origin: string;

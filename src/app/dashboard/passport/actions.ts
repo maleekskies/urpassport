@@ -50,7 +50,7 @@ export async function startPassportApplication() {
 }
 
 // Toggles one checklist item and recomputes completion_percent from how many
-// required documents are checked — this is the number the Dashboard's
+// required documents are checked, this is the number the Dashboard's
 // progress bar actually reads.
 export async function toggleChecklistItem(applicationId: string, key: string) {
   const user = await requireUser();
@@ -108,7 +108,7 @@ async function getPassportTypeId() {
     .single();
   if (error || !data) {
     throw new Error(
-      "No passport application_type found — did you run supabase/seed.sql?"
+      "No passport application_type found. Did you run supabase/seed.sql?"
     );
   }
   return data.id;

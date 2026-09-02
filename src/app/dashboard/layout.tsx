@@ -11,7 +11,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   // Belt-and-braces: middleware.ts already redirects unauthenticated requests
   // away from /dashboard, but a Server Component should never trust that
-  // alone — check again here before rendering anything user-specific.
+  // alone, check again here before rendering anything user-specific.
   if (!user) {
     redirect("/login");
   }

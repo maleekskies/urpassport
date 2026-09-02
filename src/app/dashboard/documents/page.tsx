@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { DocumentUploader } from "./DocumentUploader";
 import { DocumentList } from "./DocumentList";
+
+export const metadata: Metadata = {
+  title: "Document Vault",
+  description: "Securely store and manage your passport, visa, and travel documents.",
+};
 
 export default async function DocumentsPage() {
   const user = await requireUser();

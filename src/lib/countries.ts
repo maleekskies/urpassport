@@ -1,4 +1,4 @@
-// Shared country reference data — used by the Visa Assistant.
+// Shared country reference data, used by the Visa Assistant.
 // The 6 destinations in FULL_DATA have real researched content; every other
 // country gets honest general guidance rather than fabricated specifics.
 // Mirrors the static mockup (urpassport-ng-visa-assistant.html) so behavior
@@ -553,7 +553,7 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
 
 // Maps a country name to the `destination` code used in the `application_types`
 // table (only the 4 that are actually seeded in Supabase support a real,
-// persisted application — the rest are informational only).
+// persisted application, the rest are informational only).
 export const DB_BACKED_DESTINATIONS: Record<string, string> = {
   "United Kingdom": "UK",
   "United States": "US",
@@ -564,7 +564,7 @@ export const DB_BACKED_DESTINATIONS: Record<string, string> = {
 export const GENERIC_ELIGIBILITY: [string, string][] = [
   ["Do you hold a passport valid 6+ months beyond your travel dates?", "Most countries require at least this much remaining validity."],
   ["Can you show sufficient funds for the trip?", "Bank statements, payslips, or sponsor documents."],
-  ["Do you have documented ties to Nigeria?", "Employment, family, or property — evidence you intend to return."],
+  ["Do you have documented ties to Nigeria?", "Employment, family, or property: evidence you intend to return."],
   ["Is every detail consistent across your application and documents?", "Name spelling, dates, and figures should match everywhere."]
 ];
 export const GENERIC_DOCUMENTS: [string, string][] = [
@@ -576,12 +576,11 @@ export const GENERIC_DOCUMENTS: [string, string][] = [
 ];
 export const GENERIC_RISKS: string[] = [
   "Document inconsistencies are the most common rejection reason worldwide.",
-  "Confirm exact requirements on the destination's official embassy or consulate site — they vary by country and change often.",
-  "Never pay a third party claiming to guarantee approval."
+  "Confirm exact requirements on the destination's official embassy or consulate site. They vary by country and change often.",
+  "Never pay a third party claiming to guarantee approval.",
 ];
-export const GENERIC_INFO = { fee: "Varies by destination", processing: "Varies", wait: "Check embassy", centre: "Nearest embassy or consulate" };
 
-// ISO 3166-1 alpha-2 codes for every country in COUNTRIES — used to call the
+// ISO 3166-1 alpha-2 codes for every country in COUNTRIES, used to call the
 // live visa-requirements API (see src/lib/visaApi.ts).
 export const COUNTRY_CODES: Record<string, string> = {
   "Afghanistan": "AF",

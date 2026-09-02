@@ -73,7 +73,7 @@ export interface ProfileUpdateResult {
 }
 
 // Updates the editable fields on the user's profile row.
-// full_name and phone are plain text; NIN is hashed before storage — we never
+// full_name and phone are plain text; NIN is hashed before storage, we never
 // persist the raw NIN, matching the "nothing sent anywhere" spirit of the
 // NIN Match Checker on the Passport Hub.
 export async function updateProfile(formData: FormData): Promise<ProfileUpdateResult> {
@@ -100,8 +100,8 @@ export async function updateProfile(formData: FormData): Promise<ProfileUpdateRe
     updated_at: new Date().toISOString(),
   };
 
-  // Only touch nin_hash if the user actually typed a NIN this time —
-  // an empty field means "leave whatever's on file alone", not "clear it".
+  // Only touch nin_hash if the user actually typed a NIN this time: an
+  // empty field means "leave whatever's on file alone", not "clear it".
   if (nin) {
     update.nin_hash = await hashNin(nin);
   }

@@ -233,7 +233,7 @@ export function VisaAssistantClient({
               <span className="font-display font-bold text-base">{liveData.ruleName}</span>
               <span className="text-xs font-mono opacity-80">
                 Live data for Nigerian passport holders
-                {liveData.source === "cache" ? " (cached)" : ""} — no fully researched step-by-step
+                {liveData.source === "cache" ? " (cached)" : ""}, no fully researched step-by-step
                 guide yet, so the checklist below is general best-practice, not {selected}-specific.
               </span>
             </div>
@@ -305,7 +305,7 @@ export function VisaAssistantClient({
                 ? "Good shape. Review any No answers before you submit."
                 : pct >= 50
                 ? "Workable, but strengthen the weak points first."
-                : "Significant gaps — address these before applying."}
+                : "Significant gaps: address these before applying."}
             </div>
           </div>
         )}
@@ -344,7 +344,7 @@ export function VisaAssistantClient({
           ) : (
             <>
               <p className="text-xs text-ink-faint font-mono mb-3">
-                {dbType ? "Start the application above to save your progress." : "Informational only — not saved."}
+                {dbType ? "Start the application above to save your progress." : "Informational only: not saved."}
               </p>
               {(fullData ? fullData.documents : GENERIC_DOCUMENTS).map((doc, i) => (
                 <div key={i} className="flex items-start gap-3.5 py-3.5 border-b border-line last:border-0">

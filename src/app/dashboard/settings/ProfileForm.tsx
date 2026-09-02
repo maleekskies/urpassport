@@ -23,7 +23,7 @@ export function ProfileForm({ email, fullName, phone, hasNinOnFile }: Props) {
       if (result.success) {
         setFeedback({ type: "success", message: "Profile updated." });
       } else {
-        setFeedback({ type: "error", message: result.error || "Something went wrong." });
+        setFeedback({ type: "error", message: result.error || "Couldn't update your profile." });
       }
     });
   }
@@ -77,7 +77,7 @@ export function ProfileForm({ email, fullName, phone, hasNinOnFile }: Props) {
             name="nin"
             inputMode="numeric"
             maxLength={11}
-            placeholder={hasNinOnFile ? "•••••••••••  (on file — enter to replace)" : "11-digit NIN"}
+            placeholder={hasNinOnFile ? "•••••••••••  (on file, enter to replace)" : "11-digit NIN"}
             className="w-full px-3 py-2.5 border border-line rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-mid"
           />
           <p className="text-[11px] text-ink-faint mt-1">

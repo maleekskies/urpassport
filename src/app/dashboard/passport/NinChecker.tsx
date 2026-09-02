@@ -19,7 +19,7 @@ export function NinChecker() {
     } else {
       setResult({
         match: false,
-        message: "Names don't match exactly. Fix this before submitting — it's the #1 cause of delays.",
+        message: "Names don't match exactly. Fix this before submitting: it's the #1 cause of delays.",
       });
     }
   }

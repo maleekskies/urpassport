@@ -18,11 +18,11 @@ export async function generateItinerary(input: GenerateInput) {
 
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error(
-      "ANTHROPIC_API_KEY is not set. Add it to .env.local — see .env.local.example."
+      "ANTHROPIC_API_KEY is not set. Add it to .env.local (see .env.local.example)."
     );
   }
 
-  // Rate limit — prevents one user from running up the Anthropic bill.
+  // Rate limit: prevents one user from running up the Anthropic bill.
   const dailyLimit = Number(process.env.AI_PLANNER_DAILY_LIMIT || 5);
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
   const { count } = await supabase

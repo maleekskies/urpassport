@@ -46,7 +46,13 @@ export default function LoginPage() {
         router.refresh();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      const fallback =
+        mode === "forgot"
+          ? "Couldn't send the reset link."
+          : mode === "signup"
+          ? "Couldn't create your account."
+          : "Couldn't sign you in.";
+      setError(err instanceof Error ? err.message : fallback);
     } finally {
       setLoading(false);
     }
@@ -75,7 +81,7 @@ export default function LoginPage() {
             One login for every step between here and there.
           </h2>
           <p className="text-white/65 mt-4 max-w-sm">
-            Your passport status, visa documents, flights and itinerary — all under one
+            Your passport status, visa documents, flights and itinerary, all under one
             account, built for how Nigerians actually travel.
           </p>
         </div>
@@ -126,7 +132,7 @@ export default function LoginPage() {
             {mode === "signin"
               ? "Sign in to continue where you left off."
               : mode === "signup"
-              ? "Takes under a minute — no NIN needed yet."
+              ? "Takes under a minute. No NIN needed yet."
               : "Enter your email and we'll send you a reset link."}
           </p>
 

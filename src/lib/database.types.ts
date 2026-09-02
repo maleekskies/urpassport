@@ -5,7 +5,7 @@
 // Every table below declares `Relationships` (even when empty) because
 // @supabase/postgrest-js's GenericTable type requires it. Omitting it means
 // the table doesn't satisfy GenericTable, and the whole schema silently
-// degrades to `never` for every query — the cause of "Object literal may
+// degrades to `never` for every query, the cause of "Object literal may
 // only specify known properties... does not exist in type 'never[]'" build
 // errors on `.insert()`/`.update()` calls.
 

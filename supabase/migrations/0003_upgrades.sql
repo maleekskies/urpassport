@@ -1,4 +1,4 @@
--- UrPassport NG — upgrades: live visa data cache, flights/payments support,
+-- UrPassport NG: upgrades covering live visa data cache, flights/payments support,
 -- document expiry tracking, family members, notification log, AI rate limiting.
 
 -- ========== DOCUMENTS: expiry tracking ==========
@@ -10,7 +10,7 @@ alter table users add column if not exists notify_email boolean not null default
 
 -- ========== FAMILY MEMBERS ==========
 -- Lets a user manage passport/visa applications on behalf of dependants.
--- No raw NIN/passport numbers stored — hashed the same way as users.nin_hash.
+-- No raw NIN/passport numbers stored, hashed the same way as users.nin_hash.
 create table if not exists family_members (
   id uuid primary key default gen_random_uuid(),
   owner_user_id uuid references users(id) on delete cascade not null,
@@ -49,7 +49,7 @@ create index if not exists idx_notification_log_user on notification_log(user_id
 
 -- ========== VISA REQUIREMENTS CACHE ==========
 -- Shared reference cache for the live visa-requirements API (Travel Buddy /
--- RapidAPI). Not user-owned data — every signed-in user can read it, and the
+-- RapidAPI). Not user-owned data: every signed-in user can read it, and the
 -- app itself writes through it on a cache miss, so inserts/updates are
 -- allowed for any authenticated request rather than gated to one owner.
 create table if not exists visa_requirements_cache (
@@ -77,7 +77,7 @@ create policy "Users manage their own AI usage log" on ai_usage_log
 create policy "Users read their own notification log" on notification_log
   for select using (auth.uid() = user_id);
 -- Inserts to notification_log happen from the cron route using the service
--- role key, which bypasses RLS entirely — no insert policy needed here.
+-- role key, which bypasses RLS entirely, so no insert policy is needed here.
 
 create policy "Anyone signed in can read the visa cache" on visa_requirements_cache
   for select using (auth.role() = 'authenticated');

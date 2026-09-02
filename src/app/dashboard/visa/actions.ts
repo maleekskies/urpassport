@@ -8,7 +8,7 @@ import { COUNTRY_CODES, NIGERIA_CODE } from "@/lib/countries";
 
 // Real-time visa requirement lookup for any of the 193 countries that don't
 // have a fully researched static guide. Replaces the old static "generic
-// guidance" fallback — this is live data (cached up to VISA_CACHE_TTL_HOURS),
+// guidance" fallback, this is live data (cached up to VISA_CACHE_TTL_HOURS),
 // not fabricated content.
 export async function getLiveVisaData(countryName: string): Promise<VisaLookupResult> {
   await requireUser();
