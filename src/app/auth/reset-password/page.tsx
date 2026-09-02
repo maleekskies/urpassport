@@ -10,7 +10,6 @@ import { createClient } from "@/lib/supabase/client";
 // "set new password" form and call updateUser once the person submits it.
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const supabase = createClient();
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -34,6 +33,11 @@ export default function ResetPasswordPage() {
 
     setLoading(true);
     try {
+      // Created here, not at component top: this runs only on user
+      // interaction, in the browser. Constructing it during render would
+      // run during Next's build-time prerender pass too, with no browser
+      // and no guarantee the env vars are available at that exact moment.
+      const supabase = createClient();
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       setSuccess(true);

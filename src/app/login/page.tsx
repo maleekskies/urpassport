@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = createClient();
 
   const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signin");
   const [fullName, setFullName] = useState("");
@@ -22,6 +21,12 @@ export default function LoginPage() {
     setError(null);
     setNotice(null);
     setLoading(true);
+
+    // Created here, not at component top: this runs only on user
+    // interaction, in the browser. Constructing it during render would run
+    // during Next's build-time prerender pass too, with no browser and
+    // no guarantee the env vars are available at that exact moment.
+    const supabase = createClient();
 
     try {
       if (mode === "forgot") {
@@ -60,6 +65,7 @@ export default function LoginPage() {
 
   async function handleGoogle() {
     setError(null);
+    const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
