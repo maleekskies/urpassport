@@ -26,8 +26,8 @@ wired to actual providers.
 - **AI Trip Planner**: real Anthropic API call, structured JSON, saved to
   `itineraries`. **Rate-limited** (`AI_PLANNER_DAILY_LIMIT`, default 5/day
   per user) via `ai_usage_log`.
-- **Flights**: real search against the **Amadeus Self-Service API**
-  (test environment by default), with a visa-linked status banner that
+- **Flights**: real search against the **Duffel Flights API**
+  (test-mode token by default), with a visa-linked status banner that
   warns you if you're searching flights to a country you don't have a
   ready visa for yet. "Hold this fare" saves the offer to `bookings`.
 - **Billing**: real **Paystack** checkout for a small set of paid add-ons
@@ -75,7 +75,7 @@ All of these are optional individually, each feature degrades gracefully
 | Feature | Provider | Where to get keys |
 |---|---|---|
 | Live visa data | Travel Buddy (RapidAPI) | rapidapi.com, subscribe to "Visa Requirement API", free tier available |
-| Flights | Amadeus Self-Service | developers.amadeus.com, free self-serve test keys |
+| Flights | Duffel | duffel.com, free self-serve test-mode token |
 | Billing | Paystack | dashboard.paystack.com, test keys under Settings → API Keys & Webhooks |
 | Email reminders | Resend | resend.com, free tier, verify a sending domain |
 
@@ -115,7 +115,7 @@ src/
   components/                            # AppShell, Sidebar
   lib/
     supabase/{client,server,middleware,service}.ts
-    amadeus.ts        # Flight search
+    duffel.ts          # Flight search
     paystack.ts        # Checkout + webhook verification
     resend.ts           # Email sending
     visaApi.ts           # Live visa requirements + caching
@@ -137,7 +137,7 @@ cron job under **Settings → Cron Jobs** once deployed.
 
 ## Honest note on what wasn't verified here
 This was written and typechecked (`npx tsc --noEmit` passes clean) in an
-environment without access to Amadeus, Paystack, Resend, or RapidAPI, so
+environment without access to Duffel, Paystack, Resend, or RapidAPI, so
 none of those four integrations have been exercised against a live account,
 so the code is correct to the best of careful review against each
 provider's documented API shape, but you're the first to actually run a

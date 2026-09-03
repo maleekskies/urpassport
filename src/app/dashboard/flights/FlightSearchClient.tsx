@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { runFlightSearch, holdFlightOffer } from "./actions";
-import type { FlightOffer } from "@/lib/amadeus";
+import type { FlightOffer } from "@/lib/duffel";
 
 interface VisaApp {
   destination: string;

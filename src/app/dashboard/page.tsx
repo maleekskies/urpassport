@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/auth";
 import type { ApplicationTypeRow } from "@/lib/database.types";
 
 export const metadata: Metadata = {
@@ -29,28 +30,25 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default async function DashboardPage() {
+  const user = await requireUser();
   const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   const { data: profile } = await supabase
     .from("users")
     .select("full_name")
-    .eq("id", user!.id)
+    .eq("id", user.id)
     .single();
 
   const { data: applications } = await supabase
     .from("applications")
     .select("id, status, completion_percent, application_type_id")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .order("updated_at", { ascending: false });
 
   const { count: documentCount } = await supabase
     .from("documents")
     .select("id", { count: "exact", head: true })
-    .eq("user_id", user!.id);
+    .eq("user_id", user.id);
 
   // application_types is reference content: fetch the ones actually referenced
   let typesById: Record<string, ApplicationTypeRow> = {};

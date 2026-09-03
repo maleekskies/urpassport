@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
-import { searchFlights, type FlightSearchInput, type FlightOffer } from "@/lib/amadeus";
+import { searchFlights, type FlightSearchInput, type FlightOffer } from "@/lib/duffel";
 
 export interface FlightSearchState {
   offers?: FlightOffer[];
@@ -13,8 +13,8 @@ export interface FlightSearchState {
 export async function runFlightSearch(input: FlightSearchInput): Promise<FlightSearchState> {
   await requireUser();
 
-  if (!process.env.AMADEUS_CLIENT_ID || !process.env.AMADEUS_CLIENT_SECRET) {
-    return { error: "Flight search isn't configured yet (AMADEUS_CLIENT_ID/SECRET missing)." };
+  if (!process.env.DUFFEL_ACCESS_TOKEN) {
+    return { error: "Flight search isn't configured yet (DUFFEL_ACCESS_TOKEN missing)." };
   }
 
   try {
@@ -26,7 +26,7 @@ export async function runFlightSearch(input: FlightSearchInput): Promise<FlightS
 }
 
 // Saves a chosen offer as a "held" booking row, a lightweight save, not a
-// real ticket purchase (that would require Amadeus's paid booking flow).
+// real ticket purchase (that would require actually creating a Duffel order).
 export async function holdFlightOffer(input: {
   origin: string;
   destination: string;
@@ -41,7 +41,7 @@ export async function holdFlightOffer(input: {
   const { error } = await supabase.from("bookings").insert({
     user_id: user.id,
     booking_type: "flight",
-    provider: "amadeus",
+    provider: "duffel",
     origin: input.origin,
     destination: input.destination,
     depart_date: input.departDate,
