@@ -92,7 +92,7 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
       const body = await response.json();
       if (body?.error?.message) message = body.error.message;
     } catch {
-      // Response wasn't JSON — keep the generic status-based message.
+      // Response wasn't JSON, keep the generic status-based message.
     }
     return { error: message };
   }
