@@ -32,17 +32,17 @@ export function PlannerForm({ remaining, dailyLimit }: { remaining: number; dail
     }
 
     startTransition(async () => {
-      try {
-        await generateItinerary({
-          destination,
-          startDate,
-          endDate,
-          budgetNgn: Number(budget) || 0,
-          purpose,
-        });
+      const result = await generateItinerary({
+        destination,
+        startDate,
+        endDate,
+        budgetNgn: Number(budget) || 0,
+        purpose,
+      });
+      if (result.error) {
+        setError(result.error);
+      } else {
         router.refresh();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to generate itinerary.");
       }
     });
   }

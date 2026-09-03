@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { runFlightSearch, holdFlightOffer } from "./actions";
-import type { FlightOffer } from "@/lib/duffel";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { runFlightSearch, holdFlightOffer, lookupAirports } from "./actions";
+import type { FlightOffer, PlaceSuggestion } from "@/lib/duffel";
 
 interface VisaApp {
   destination: string;
@@ -29,6 +29,82 @@ const AIRPORT_TO_DEST: Record<string, string> = {
   YYZ: "Canada", YVR: "Canada", YUL: "Canada",
   DXB: "UAE", AUH: "UAE", SHJ: "UAE",
 };
+
+// Type a city or airport name, pick a suggestion, get the IATA code behind
+// it. Falls back to accepting a raw 3-letter code typed directly, so
+// nothing breaks for anyone who already knows the code they want.
+function AirportField({
+  label,
+  code,
+  onChange,
+}: {
+  label: string;
+  code: string;
+  onChange: (code: string) => void;
+}) {
+  const [query, setQuery] = useState(code);
+  const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
+  const [open, setOpen] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setQuery(code);
+  }, [code]);
+
+  function handleInput(value: string) {
+    setQuery(value);
+    onChange(value.toUpperCase());
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (value.trim().length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    debounceRef.current = setTimeout(async () => {
+      const results = await lookupAirports(value);
+      setSuggestions(results);
+      setOpen(results.length > 0);
+    }, 300);
+  }
+
+  function handleSelect(place: PlaceSuggestion) {
+    onChange(place.iataCode);
+    setQuery(`${place.cityName || place.name} (${place.iataCode})`);
+    setOpen(false);
+    setSuggestions([]);
+  }
+
+  return (
+    <div className="relative">
+      <label className="block text-xs font-semibold text-ink-soft mb-1.5">{label}</label>
+      <input
+        value={query}
+        onChange={(e) => handleInput(e.target.value)}
+        onFocus={() => suggestions.length > 0 && setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 150)}
+        placeholder="City or airport"
+        className="w-full px-3 py-2.5 border border-line rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-mid"
+      />
+      {open && (
+        <div className="absolute z-10 mt-1 w-full bg-panel border border-line rounded-md shadow-lg max-h-56 overflow-y-auto">
+          {suggestions.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              onMouseDown={() => handleSelect(s)}
+              className="w-full text-left px-3 py-2 text-sm hover:bg-green-pale border-b border-line last:border-0"
+            >
+              <span className="font-semibold">{s.cityName || s.name}</span>{" "}
+              <span className="text-ink-faint font-mono text-xs">{s.iataCode}</span>
+              {s.type === "airport" && s.name !== s.cityName && (
+                <div className="text-ink-faint text-xs">{s.name}</div>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function FlightSearchClient({
   visaApplications,
@@ -111,16 +187,8 @@ export function FlightSearchClient({
       )}
 
       <form onSubmit={handleSearch} className="bg-panel border border-line rounded-lg p-6 mb-6 grid sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
-        <div>
-          <label className="block text-xs font-semibold text-ink-soft mb-1.5">From (IATA)</label>
-          <input value={origin} onChange={(e) => setOrigin(e.target.value.toUpperCase())} maxLength={3}
-            className="w-full px-3 py-2.5 border border-line rounded-md text-sm uppercase focus:outline-none focus:ring-2 focus:ring-green-mid" />
-        </div>
-        <div>
-          <label className="block text-xs font-semibold text-ink-soft mb-1.5">To (IATA)</label>
-          <input value={destination} onChange={(e) => setDestination(e.target.value.toUpperCase())} maxLength={3}
-            className="w-full px-3 py-2.5 border border-line rounded-md text-sm uppercase focus:outline-none focus:ring-2 focus:ring-green-mid" />
-        </div>
+        <AirportField label="From" code={origin} onChange={setOrigin} />
+        <AirportField label="To" code={destination} onChange={setDestination} />
         <div>
           <label className="block text-xs font-semibold text-ink-soft mb-1.5">Depart</label>
           <input type="date" value={departDate} onChange={(e) => setDepartDate(e.target.value)} required

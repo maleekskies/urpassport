@@ -12,14 +12,22 @@ interface GenerateInput {
   purpose: string;
 }
 
-export async function generateItinerary(input: GenerateInput) {
+export interface GenerateResult {
+  itineraryId?: string;
+  error?: string;
+}
+
+// Returns a result object instead of throwing. Errors thrown from a Server
+// Action get their message redacted by Next.js in production (a security
+// measure, not a bug) and replaced with a generic "Server Components
+// render" message, so any error the person should actually see has to
+// travel back as normal data, not as a thrown exception.
+export async function generateItinerary(input: GenerateInput): Promise<GenerateResult> {
   const user = await requireUser();
   const supabase = createClient();
 
   if (!process.env.ANTHROPIC_API_KEY) {
-    throw new Error(
-      "ANTHROPIC_API_KEY is not set. Add it to .env.local (see .env.local.example)."
-    );
+    return { error: "AI Trip Planner isn't configured yet (ANTHROPIC_API_KEY missing)." };
   }
 
   // Rate limit: prevents one user from running up the Anthropic bill.
@@ -33,9 +41,7 @@ export async function generateItinerary(input: GenerateInput) {
     .gte("created_at", since);
 
   if ((count || 0) >= dailyLimit) {
-    throw new Error(
-      `You've reached today's limit of ${dailyLimit} AI itineraries. Try again in 24 hours.`
-    );
+    return { error: `You've reached today's limit of ${dailyLimit} AI itineraries. Try again in 24 hours.` };
   }
 
   const days =
@@ -60,23 +66,35 @@ Respond with ONLY valid JSON, no markdown fences, no commentary, matching exactl
 
 Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders should include any document reminders relevant to a Nigerian traveler visiting ${input.destination}.`;
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": process.env.ANTHROPIC_API_KEY,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: process.env.ANTHROPIC_MODEL || "claude-sonnet-5",
-      max_tokens: 4096,
-      messages: [{ role: "user", content: prompt }],
-    }),
-  });
+  let response: Response;
+  try {
+    response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: process.env.ANTHROPIC_MODEL || "claude-sonnet-5",
+        max_tokens: 4096,
+        messages: [{ role: "user", content: prompt }],
+      }),
+      signal: AbortSignal.timeout(60000),
+    });
+  } catch (err) {
+    return { error: err instanceof Error ? `Couldn't reach the AI planner: ${err.message}` : "Couldn't reach the AI planner." };
+  }
 
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Anthropic API error (${response.status}): ${text}`);
+    let message = `AI planner request failed (${response.status}).`;
+    try {
+      const body = await response.json();
+      if (body?.error?.message) message = body.error.message;
+    } catch {
+      // Response wasn't JSON — keep the generic status-based message.
+    }
+    return { error: message };
   }
 
   const data = await response.json();
@@ -90,7 +108,7 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
     const cleaned = rawText.trim().replace(/^```json\s*/i, "").replace(/```$/, "");
     planJson = JSON.parse(cleaned);
   } catch {
-    throw new Error("The AI response wasn't valid JSON. Try again.");
+    return { error: "The AI response wasn't valid JSON. Try again." };
   }
 
   const { data: itinerary, error } = await supabase
@@ -108,10 +126,10 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
     .select("id")
     .single();
 
-  if (error) throw error;
+  if (error) return { error: error.message };
 
   await supabase.from("ai_usage_log").insert({ user_id: user.id, feature: "trip_planner" });
 
   revalidatePath("/dashboard/planner");
-  return itinerary.id;
+  return { itineraryId: itinerary.id };
 }

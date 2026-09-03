@@ -46,6 +46,39 @@ export interface FlightOffer {
   }[];
 }
 
+// Airport/city lookup, so people can type "Lagos" instead of needing to
+// already know "LOS". Uses Duffel's places-suggestions endpoint.
+export interface PlaceSuggestion {
+  id: string;
+  name: string;
+  iataCode: string;
+  cityName: string | null;
+  countryName: string | null;
+  type: "airport" | "city";
+}
+
+export async function searchPlaces(query: string): Promise<PlaceSuggestion[]> {
+  if (!query.trim()) return [];
+
+  const res = await fetch(
+    `${BASE_URL}/places/suggestions?query=${encodeURIComponent(query)}`,
+    { headers: authHeaders(), signal: AbortSignal.timeout(8000) }
+  );
+
+  if (!res.ok) return [];
+
+  const json = await res.json();
+  return ((json.data || []) as any[])
+    .filter((p) => p.iata_code)
+    .map((p) => ({
+      id: p.id as string,
+      name: p.name as string,
+      iataCode: p.iata_code as string,
+      cityName: (p.city_name as string) || (p.city?.name as string) || null,
+      countryName: (p.iata_country_code as string) || null,
+      type: (p.type === "city" ? "city" : "airport") as "airport" | "city",
+    }));
+}
 export async function searchFlights(input: FlightSearchInput): Promise<FlightOffer[]> {
   const slices: { origin: string; destination: string; departure_date: string }[] = [
     { origin: input.origin.toUpperCase(), destination: input.destination.toUpperCase(), departure_date: input.departDate },

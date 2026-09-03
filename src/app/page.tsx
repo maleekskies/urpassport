@@ -102,8 +102,12 @@ export default function LandingPage() {
       </section>
 
       <footer className="border-t border-line py-10">
-        <div className="max-w-[1180px] mx-auto px-7 text-xs text-ink-soft font-mono">
-          © 2026 UrPassport NG. Not affiliated with the Nigeria Immigration Service.
+        <div className="max-w-[1180px] mx-auto px-7 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs text-ink-soft font-mono">
+          <span>© 2026 UrPassport NG. Not affiliated with the Nigeria Immigration Service.</span>
+          <span className="flex gap-4">
+            <Link href="/terms" className="hover:text-ink underline">Terms</Link>
+            <Link href="/privacy" className="hover:text-ink underline">Privacy</Link>
+          </span>
         </div>
       </footer>
     </div>

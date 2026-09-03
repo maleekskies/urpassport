@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
-import { searchFlights, type FlightSearchInput, type FlightOffer } from "@/lib/duffel";
+import { searchFlights, searchPlaces, type FlightSearchInput, type FlightOffer, type PlaceSuggestion } from "@/lib/duffel";
 
 export interface FlightSearchState {
   offers?: FlightOffer[];
@@ -22,6 +22,16 @@ export async function runFlightSearch(input: FlightSearchInput): Promise<FlightS
     return { offers };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Flight search failed." };
+  }
+}
+
+export async function lookupAirports(query: string): Promise<PlaceSuggestion[]> {
+  await requireUser();
+  if (!process.env.DUFFEL_ACCESS_TOKEN) return [];
+  try {
+    return await searchPlaces(query);
+  } catch {
+    return [];
   }
 }
 
