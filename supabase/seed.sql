@@ -9,7 +9,7 @@ insert into application_types
 values
 (
   'passport', null, null, 'Nigerian Passport Renewal',
-  200000, 'NGN', 15, 42,
+  100000, 'NGN', 28, 42,
   '[
     {"key":"old_passport","label":"Current (old) passport","description":"Required for renewal, presented at biometrics for cancellation.","required":true},
     {"key":"nin_slip","label":"Valid NIN slip","description":"Must match your application name exactly.","required":true},
@@ -30,7 +30,7 @@ values
     {"step_number":9,"title":"Collect passport","description":"When status shows Issued."}
   ]',
   '["Name on application doesn''t exactly match NIN record.","Photo doesn''t meet spec.","Missed biometric slot without rescheduling.","Payment made outside the official portal."]',
-  '2026-08-01'
+  '2026-09-01'
 ),
 (
   'visa', 'UK', 'tourist', 'UK Standard Visitor Visa',

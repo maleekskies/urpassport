@@ -49,6 +49,29 @@ export default async function PassportPage() {
       <div className="text-xs font-mono text-ink-faint mb-2">Dashboard / Passport Hub</div>
       <h1 className="font-display text-2xl mb-6">Nigerian Passport</h1>
 
+      <div className="bg-panel border border-line rounded-lg p-6 mb-6 grid grid-cols-2 md:grid-cols-3 gap-5">
+        <div>
+          <div className="text-xs font-semibold text-ink-faint uppercase tracking-wide mb-1">Fee</div>
+          <div className="font-display text-base font-semibold">₦100,000 <span className="text-ink-faint font-normal text-sm">or</span> ₦200,000</div>
+          <div className="text-ink-faint text-xs mt-0.5">32-page (5yr) or 64-page (10yr)</div>
+        </div>
+        <div>
+          <div className="text-xs font-semibold text-ink-faint uppercase tracking-wide mb-1">Processing time</div>
+          <div className="font-display text-base font-semibold">4 to 6 weeks</div>
+          <div className="text-ink-faint text-xs mt-0.5">Regular service</div>
+        </div>
+        <div>
+          <div className="text-xs font-semibold text-ink-faint uppercase tracking-wide mb-1">Validity</div>
+          <div className="font-display text-base font-semibold">5 or 10 years</div>
+          <div className="text-ink-faint text-xs mt-0.5">Matches booklet type chosen</div>
+        </div>
+      </div>
+      <p className="text-ink-faint text-xs mb-6 -mt-3">
+        Fees shown are for applications within Nigeria (diaspora pricing differs). Last verified
+        September 2026 against the official NIS fee schedule, confirm on passport.immigration.gov.ng
+        before paying, since fees have changed more than once in recent years.
+      </p>
+
       {!application ? (
         <div className="bg-panel border border-line rounded-lg p-8 text-center">
           <p className="text-ink-soft text-sm mb-5 max-w-md mx-auto">
