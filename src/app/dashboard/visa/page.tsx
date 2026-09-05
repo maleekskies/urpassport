@@ -21,7 +21,7 @@ export default async function VisaPage() {
   const { data: applications } = typeIds.length
     ? await supabase
         .from("applications")
-        .select("id, application_type_id, checklist_state, completion_percent, status")
+        .select("id, application_type_id, destination_country, checklist_state, completion_percent, status")
         .eq("user_id", user.id)
         .in("application_type_id", typeIds)
     : { data: [] };

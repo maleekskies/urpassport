@@ -41,7 +41,7 @@ export default async function DashboardPage() {
 
   const { data: applications } = await supabase
     .from("applications")
-    .select("id, status, completion_percent, application_type_id")
+    .select("id, status, completion_percent, application_type_id, destination_country")
     .eq("user_id", user.id)
     .order("updated_at", { ascending: false });
 
@@ -113,16 +113,23 @@ export default async function DashboardPage() {
             ) : (
               applications.map((app) => {
                 const type = typesById[app.application_type_id];
+                const country = type?.destination || app.destination_country;
+                const label =
+                  type?.display_name && type.display_name !== "Visa Application"
+                    ? type.display_name
+                    : app.destination_country
+                    ? `${app.destination_country} Visa Application`
+                    : type?.display_name || "Application";
                 return (
                   <div
                     key={app.id}
                     className="flex items-center gap-4 py-4 border-b border-line last:border-0"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-green-pale text-green-deep flex items-center justify-center font-mono text-xs font-bold flex-shrink-0">
-                      {type?.destination || "NGP"}
+                    <div className="w-10 h-10 rounded-lg bg-green-pale text-green-deep flex items-center justify-center font-mono text-[10px] font-bold flex-shrink-0 text-center leading-tight px-1">
+                      {country ? country.slice(0, 3).toUpperCase() : "NGP"}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-sm">{type?.display_name || "Application"}</div>
+                      <div className="font-semibold text-sm">{label}</div>
                       <div className="w-full h-1.5 bg-green-pale rounded-full mt-2 overflow-hidden">
                         <div
                           className="h-full bg-green-mid rounded-full"

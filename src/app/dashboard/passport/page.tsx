@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
@@ -44,6 +45,12 @@ export default async function PassportPage() {
     required: boolean;
   }[];
 
+  const steps = (passportType.process_steps || []) as {
+    step_number: number;
+    title: string;
+    description: string;
+  }[];
+
   return (
     <div>
       <div className="text-xs font-mono text-ink-faint mb-2">Dashboard / Passport Hub</div>
@@ -71,6 +78,38 @@ export default async function PassportPage() {
         September 2026 against the official NIS fee schedule, confirm on passport.immigration.gov.ng
         before paying, since fees have changed more than once in recent years.
       </p>
+
+      <div className="bg-panel border border-line rounded-lg p-6 mb-6">
+        <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
+          <h2 className="font-display text-lg">How to apply</h2>
+          <a
+            href="https://passport.immigration.gov.ng"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-green-deep hover:bg-green-mid transition-colors text-white font-semibold text-xs px-4 py-2 rounded-md"
+          >
+            Apply on the official NIS portal ↗
+          </a>
+        </div>
+        <ol className="space-y-3">
+          {steps.map((s) => (
+            <li key={s.step_number} className="flex gap-3">
+              <span className="font-mono text-xs font-bold text-green-mid flex-shrink-0 w-5">
+                {s.step_number}.
+              </span>
+              <div>
+                <div className="font-semibold text-sm">{s.title}</div>
+                {s.description && <div className="text-ink-soft text-sm mt-0.5">{s.description}</div>}
+              </div>
+            </li>
+          ))}
+        </ol>
+        <p className="text-ink-faint text-xs mt-4">
+          Summarized from the Nigeria Immigration Service&rsquo;s own published process. Everything
+          here happens on their portal, this app only helps you track your own checklist and
+          progress alongside it.
+        </p>
+      </div>
 
       {!application ? (
         <div className="bg-panel border border-line rounded-lg p-8 text-center">

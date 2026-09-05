@@ -121,6 +121,7 @@ export interface Database {
           created_at: string;
           updated_at: string;
           family_member_id: string | null;
+          destination_country: string | null;
         };
         Insert: Partial<Database["public"]["Tables"]["applications"]["Row"]> & {
           user_id: string;

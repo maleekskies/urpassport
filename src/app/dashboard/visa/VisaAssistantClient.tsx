@@ -6,7 +6,6 @@ import {
   FULL_DATA,
   DB_BACKED_DESTINATIONS,
   GENERIC_ELIGIBILITY,
-  GENERIC_DOCUMENTS,
   GENERIC_RISKS,
 } from "@/lib/countries";
 import { startVisaApplication, toggleVisaChecklistItem, getLiveVisaData } from "./actions";
@@ -30,6 +29,7 @@ interface DbApplicationType {
 interface DbApplication {
   id: string;
   application_type_id: string;
+  destination_country: string | null;
   checklist_state: Record<string, boolean>;
   completion_percent: number;
   status: string;
@@ -67,17 +67,28 @@ export function VisaAssistantClient({
     return map;
   }, [applicationTypes]);
 
-  const appByTypeId = useMemo(() => {
+  const appByKey = useMemo(() => {
     const map: Record<string, DbApplication> = {};
-    for (const a of applications) map[a.application_type_id] = a;
+    for (const a of applications) {
+      map[`${a.application_type_id}|${a.destination_country || ""}`] = a;
+    }
     return map;
   }, [applications]);
 
+  // Every country supports a real, saved application now. The six with a
+  // dedicated researched guide use their own application_type row; every
+  // other country shares one generic type, distinguished by destination_country.
+  const genericType = useMemo(
+    () => applicationTypes.find((t) => t.visa_subtype === "generic"),
+    [applicationTypes]
+  );
+
   const dbCode = DB_BACKED_DESTINATIONS[selected];
   const availableSubtypes = dbCode ? typesByDestCode[dbCode] || [] : [];
-  const dbType =
+  const dedicatedType =
     availableSubtypes.find((t) => t.visa_subtype === selectedSubtype) || availableSubtypes[0];
-  const existingApp = dbType ? appByTypeId[dbType.id] : undefined;
+  const dbType = dedicatedType || genericType;
+  const existingApp = dbType ? appByKey[`${dbType.id}|${dedicatedType ? "" : selected}`] : undefined;
   const fullData = FULL_DATA[selected];
 
   // For every country without a fully researched static guide, pull a real,
@@ -108,7 +119,7 @@ export function VisaAssistantClient({
   function handleStart() {
     if (!dbType) return;
     startTransition(() => {
-      startVisaApplication(dbType.id);
+      startVisaApplication(dbType.id, dedicatedType ? undefined : selected);
     });
   }
 
@@ -171,15 +182,15 @@ export function VisaAssistantClient({
                     c === selected ? "bg-gold text-navy" : "bg-gold-soft text-[#7a5c1a]"
                   }`}
                 >
-                  {DB_BACKED_DESTINATIONS[c] ? "★ Live Guide" : "★ Full Guide"}
+                  ★ Full Guide
                 </span>
               )}
             </div>
           ))}
         </div>
         <p className="text-xs text-ink-faint font-mono mt-2.5">
-          ★ Live Guide = real, saveable application. ★ Full Guide = fully researched info,
-          not yet backed by a saved application. Other countries show general requirements.
+          ★ Full Guide = fully researched, country-specific info. Every country supports a real,
+          saved application, tracked with a general document checklist unless marked ★ Full Guide.
         </p>
       </div>
 
@@ -250,14 +261,14 @@ export function VisaAssistantClient({
       {dbType && !existingApp && (
         <div className="bg-panel border border-line rounded-lg p-6 mb-6 text-center">
           <p className="text-ink-soft text-sm mb-4">
-            Start a real, saved {dbType.display_name} application to track your checklist here.
+            Start a real, saved {dedicatedType ? dbType.display_name : `${selected} visa application`} to track your checklist here.
           </p>
           <button
             onClick={handleStart}
             disabled={isPending}
             className="bg-green-deep hover:bg-green-mid transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-md disabled:opacity-60"
           >
-            {isPending ? "Starting..." : `Start ${dbType.display_name}`}
+            {isPending ? "Starting..." : dedicatedType ? `Start ${dbType.display_name}` : `Start ${selected} Application`}
           </button>
         </div>
       )}
@@ -344,14 +355,14 @@ export function VisaAssistantClient({
           ) : (
             <>
               <p className="text-xs text-ink-faint font-mono mb-3">
-                {dbType ? "Start the application above to save your progress." : "Informational only: not saved."}
+                Start the application above to save your progress.
               </p>
-              {(fullData ? fullData.documents : GENERIC_DOCUMENTS).map((doc, i) => (
+              {dbType?.document_requirements.map((doc, i) => (
                 <div key={i} className="flex items-start gap-3.5 py-3.5 border-b border-line last:border-0">
                   <div className="w-5.5 h-5.5 rounded-md border-[1.5px] border-line flex-shrink-0 mt-0.5" />
                   <div>
-                    <div className="font-semibold text-sm">{doc[0]}</div>
-                    {doc[1] && <div className="text-ink-soft text-sm mt-0.5">{doc[1]}</div>}
+                    <div className="font-semibold text-sm">{doc.label}</div>
+                    {doc.description && <div className="text-ink-soft text-sm mt-0.5">{doc.description}</div>}
                   </div>
                 </div>
               ))}

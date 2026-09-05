@@ -20,16 +20,22 @@ export async function getLiveVisaData(countryName: string): Promise<VisaLookupRe
   return getLiveVisaRequirement(supabase, NIGERIA_CODE, destCode);
 }
 
-export async function startVisaApplication(applicationTypeId: string) {
+export async function startVisaApplication(applicationTypeId: string, destinationCountry?: string) {
   const user = await requireUser();
   const supabase = createClient();
 
-  const { data: existing } = await supabase
+  // The generic visa type is shared across ~187 countries, so an existing
+  // application for that type has to also match on destinationCountry, or
+  // every country using it would collide into the same saved application.
+  let existingQuery = supabase
     .from("applications")
     .select("id")
     .eq("user_id", user.id)
-    .eq("application_type_id", applicationTypeId)
-    .maybeSingle();
+    .eq("application_type_id", applicationTypeId);
+  existingQuery = destinationCountry
+    ? existingQuery.eq("destination_country", destinationCountry)
+    : existingQuery.is("destination_country", null);
+  const { data: existing } = await existingQuery.maybeSingle();
 
   if (existing) {
     revalidatePath("/dashboard/visa");
@@ -41,6 +47,7 @@ export async function startVisaApplication(applicationTypeId: string) {
     .insert({
       user_id: user.id,
       application_type_id: applicationTypeId,
+      destination_country: destinationCountry || null,
       status: "in_progress",
       current_step: 1,
       completion_percent: 0,

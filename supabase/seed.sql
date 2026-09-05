@@ -19,15 +19,16 @@ values
     {"key":"guarantor_form","label":"Signed guarantor''s form","description":"Sworn before a Commissioner for Oaths.","required":true}
   ]',
   '[
-    {"step_number":1,"title":"Create account","description":"Register at passport.immigration.gov.ng"},
-    {"step_number":2,"title":"Enter NIN & personal details","description":"System auto-pulls NIMC data."},
-    {"step_number":3,"title":"Choose passport type","description":"32 or 64 page."},
-    {"step_number":4,"title":"Upload documents","description":"All required documents."},
-    {"step_number":5,"title":"Pay on portal","description":"Official portal only, never a third party."},
-    {"step_number":6,"title":"Book biometrics","description":"Print payment + acknowledgment slips."},
-    {"step_number":7,"title":"Attend biometrics","description":"Bring original documents."},
-    {"step_number":8,"title":"Track enrollment","description":"track.immigration.gov.ng"},
-    {"step_number":9,"title":"Collect passport","description":"When status shows Issued."}
+    {"step_number":1,"title":"Apply for Fresh Passport","description":"Start from the official application portal dashboard at passport.immigration.gov.ng."},
+    {"step_number":2,"title":"Verify your NIN","description":"Enter your date of birth for a second-level NIMC check."},
+    {"step_number":3,"title":"Select centre and booklet size","description":"Choose your processing centre and either 32 or 64 pages."},
+    {"step_number":4,"title":"Upload your photo","description":"Must meet ICAO specification."},
+    {"step_number":5,"title":"Review your NIMC record","description":"Confirm personal details and provide a valid email address."},
+    {"step_number":6,"title":"Add contact and next of kin info","description":""},
+    {"step_number":7,"title":"Upload supporting documents","description":"Based on your specific application type."},
+    {"step_number":8,"title":"Review and submit","description":""},
+    {"step_number":9,"title":"Pay and book biometrics","description":"Appear in person at your chosen Immigration Office for biometric data capture."},
+    {"step_number":10,"title":"Collect passport","description":"When status shows Issued."}
   ]',
   '["Name on application doesn''t exactly match NIN record.","Photo doesn''t meet spec.","Missed biometric slot without rescheduling.","Payment made outside the official portal."]',
   '2026-09-01'

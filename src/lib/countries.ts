@@ -552,13 +552,16 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
 };
 
 // Maps a country name to the `destination` code used in the `application_types`
-// table (only the 4 that are actually seeded in Supabase support a real,
-// persisted application, the rest are informational only).
+// table. Every country now supports a real, persisted application (see
+// migration 0004); these six specifically have a dedicated, fully
+// researched application_type row instead of the shared generic one.
 export const DB_BACKED_DESTINATIONS: Record<string, string> = {
   "United Kingdom": "UK",
   "United States": "US",
   "Canada": "Canada",
   "United Arab Emirates": "UAE",
+  "France": "France",
+  "Ghana": "Ghana",
 };
 
 export const GENERIC_ELIGIBILITY: [string, string][] = [
