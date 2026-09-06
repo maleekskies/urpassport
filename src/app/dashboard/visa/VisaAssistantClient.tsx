@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import {
   COUNTRIES,
   FULL_DATA,
@@ -55,6 +55,7 @@ export function VisaAssistantClient({
   const [selectedSubtype, setSelectedSubtype] = useState("tourist");
   const [answers, setAnswers] = useState<Record<number, "yes" | "no">>({});
   const [isPending, startTransition] = useTransition();
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   // Group by destination code, since a destination can now have multiple
   // visa subtypes (tourist, student, work, ...) each with their own row.
@@ -171,6 +172,12 @@ export function VisaAssistantClient({
                 setSelected(c);
                 setSelectedSubtype("tourist");
                 setAnswers({});
+                // Results render below the country list; without this, a
+                // click looks like nothing happened unless you already
+                // know to scroll down.
+                requestAnimationFrame(() => {
+                  resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                });
               }}
               className={`flex justify-between items-center gap-2 flex-wrap px-4 py-2.5 border-b border-line last:border-0 text-sm font-medium cursor-pointer
               ${c === selected ? "bg-green-deep text-white font-bold" : "text-ink-soft hover:bg-green-pale hover:text-green-deep"}`}
@@ -195,7 +202,7 @@ export function VisaAssistantClient({
       </div>
 
       {/* Info card */}
-      <div className="bg-gradient-to-br from-green-deep to-navy text-white rounded-lg p-6 mb-6 grid grid-cols-2 md:grid-cols-4 gap-5">
+      <div ref={resultsRef} className="bg-gradient-to-br from-green-deep to-navy text-white rounded-lg p-6 mb-6 grid grid-cols-2 md:grid-cols-4 gap-5">
         <InfoItem k="Fee" v={info.fee} />
         <InfoItem k="Processing" v={info.processing} />
         <InfoItem k="Realistic Wait" v={info.wait} />
