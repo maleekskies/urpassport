@@ -5,8 +5,8 @@ import type { Database } from "@/lib/database.types";
 // Use this in Server Components, Server Actions, and Route Handlers.
 // It reads/writes the auth session via cookies, so `auth.uid()` works
 // correctly in Supabase Row-Level Security policies.
-export function createClient() {
-  const cookieStore = cookies();
+export async function createClient() {
+  const cookieStore = await cookies();
 
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

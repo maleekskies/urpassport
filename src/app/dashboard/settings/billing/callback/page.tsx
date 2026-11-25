@@ -11,9 +11,10 @@ export const dynamic = "force-dynamic";
 export default async function BillingCallbackPage({
   searchParams,
 }: {
-  searchParams: { reference?: string; trxref?: string };
+  searchParams: Promise<{ reference?: string; trxref?: string }>;
 }) {
-  const reference = searchParams.reference || searchParams.trxref;
+  const params = await searchParams;
+  const reference = params.reference || params.trxref;
 
   if (!reference) {
     return (

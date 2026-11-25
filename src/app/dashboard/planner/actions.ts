@@ -24,7 +24,7 @@ export interface GenerateResult {
 // travel back as normal data, not as a thrown exception.
 export async function generateItinerary(input: GenerateInput): Promise<GenerateResult> {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if (!process.env.GROQ_API_KEY) {
     return { error: "AI Trip Planner isn't configured yet (GROQ_API_KEY missing)." };
