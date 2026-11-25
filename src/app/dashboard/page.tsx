@@ -31,7 +31,7 @@ const STATUS_LABEL: Record<string, string> = {
 
 export default async function DashboardPage() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: profile } = await supabase
     .from("users")

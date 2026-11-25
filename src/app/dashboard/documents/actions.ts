@@ -12,7 +12,7 @@ export async function recordDocument(input: {
   expiryDate?: string | null;
 }) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if (!input.filePath.startsWith(`${user.id}/`)) {
     throw new Error("Document path is not in your folder.");
@@ -35,7 +35,7 @@ export async function recordDocument(input: {
 
 export async function deleteDocument(documentId: string) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: doc } = await supabase
     .from("documents")

@@ -9,7 +9,7 @@ import { BILLABLE_ITEMS } from "@/lib/billing";
 
 export async function initializePayment(purposeKey: string) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
   const item = BILLABLE_ITEMS[purposeKey];
   if (!item) throw new Error("Unknown billing item.");
 
@@ -42,7 +42,7 @@ export async function initializePayment(purposeKey: string) {
 // back before the webhook has landed).
 export async function verifyPayment(reference: string) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: existing } = await supabase
     .from("payments")
@@ -75,7 +75,7 @@ export interface ProfileUpdateResult {
 // NIN is hashed before storage. The raw value is never persisted.
 export async function updateProfile(formData: FormData): Promise<ProfileUpdateResult> {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const fullName = String(formData.get("full_name") || "").trim();
   const phone = String(formData.get("phone") || "").trim();
@@ -116,7 +116,7 @@ export async function updateProfile(formData: FormData): Promise<ProfileUpdateRe
 
 export async function setEmailReminders(enabled: boolean) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase.from("users").update({ notify_email: enabled }).eq("id", user.id);
   if (error) throw error;
   revalidatePath("/dashboard/settings");

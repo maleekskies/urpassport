@@ -24,7 +24,7 @@ export async function getLiveVisaData(countryName: string): Promise<VisaLookupRe
 
 export async function startVisaApplication(applicationTypeId: string, destinationCountry?: string) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // The generic visa type is shared across ~187 countries, so an existing
   // application for that type has to also match on destinationCountry, or
@@ -73,7 +73,7 @@ export async function startVisaApplication(applicationTypeId: string, destinatio
 
 export async function toggleVisaChecklistItem(applicationId: string, key: string) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: app, error: fetchError } = await supabase
     .from("applications")

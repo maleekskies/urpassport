@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function PassportPage() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: passportType } = await supabase
     .from("application_types")

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function VisaPage() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: applicationTypes } = await supabase
     .from("application_types")

@@ -8,7 +8,7 @@ import { requireUser } from "@/lib/auth";
 // Idempotent: if called again, it just returns the existing application.
 export async function startPassportApplication() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const typeId = await getPassportTypeId();
 
@@ -54,7 +54,7 @@ export async function startPassportApplication() {
 // progress bar actually reads.
 export async function toggleChecklistItem(applicationId: string, key: string) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: app, error: fetchError } = await supabase
     .from("applications")
@@ -101,7 +101,7 @@ export async function toggleChecklistItem(applicationId: string, key: string) {
 }
 
 async function getPassportTypeId() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("application_types")
     .select("id")

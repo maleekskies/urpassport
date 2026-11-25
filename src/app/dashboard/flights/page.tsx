@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function FlightsPage() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // In-progress visa applications power the warning about a missing ready visa.
   const { data: applications } = await supabase

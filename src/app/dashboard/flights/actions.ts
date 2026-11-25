@@ -46,7 +46,7 @@ export async function holdFlightOffer(input: {
   offerId: string;
 }) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase.from("bookings").insert({
     user_id: user.id,

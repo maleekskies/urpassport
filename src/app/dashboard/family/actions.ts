@@ -12,7 +12,7 @@ async function hashNin(nin: string): Promise<string> {
 
 export async function addFamilyMember(formData: FormData) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const fullName = String(formData.get("full_name") || "").trim();
   const relationship = String(formData.get("relationship") || "").trim();
@@ -38,7 +38,7 @@ export async function addFamilyMember(formData: FormData) {
 
 export async function removeFamilyMember(id: string) {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: existing } = await supabase
     .from("family_members")
