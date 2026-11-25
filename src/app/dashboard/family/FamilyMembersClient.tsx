@@ -22,8 +22,8 @@ export function FamilyMembersClient({ members }: { members: FamilyMember[] }) {
 
   function handleRemove(id: string) {
     if (!confirm("Remove this family member? This won't delete any applications already linked to them.")) return;
-    startTransition(() => {
-      removeFamilyMember(id);
+    startTransition(async () => {
+      await removeFamilyMember(id);
     });
   }
 

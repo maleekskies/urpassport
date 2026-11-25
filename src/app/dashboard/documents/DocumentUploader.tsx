@@ -13,7 +13,6 @@ const DOCUMENT_TYPES = [
 ];
 
 export function DocumentUploader({ userId }: { userId: string }) {
-  const supabase = createClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +26,9 @@ export function DocumentUploader({ userId }: { userId: string }) {
       if (file.size > 10 * 1024 * 1024) {
         throw new Error("File is larger than 10MB.");
       }
-      const path = `${userId}/${Date.now()}-${file.name}`;
+      const supabase = createClient();
+      const safeName = file.name.replace(/[^a-zA-Z0-9._ -]/g, "_");
+      const path = `${userId}/${Date.now()}-${safeName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("documents")

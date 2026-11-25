@@ -44,6 +44,10 @@ export async function generateItinerary(input: GenerateInput): Promise<GenerateR
     return { error: `You've reached today's limit of ${dailyLimit} AI itineraries. Try again in 24 hours.` };
   }
 
+  if (new Date(input.endDate).getTime() <= new Date(input.startDate).getTime()) {
+    return { error: "End date must be after start date." };
+  }
+
   const days =
     Math.max(
       1,
@@ -97,7 +101,12 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
     return { error: message };
   }
 
-  const data = await response.json();
+  let data: any;
+  try {
+    data = await response.json();
+  } catch {
+    return { error: "The AI response couldn't be read. Try again." };
+  }
   const rawText: string = data.content
     .filter((block: { type: string }) => block.type === "text")
     .map((block: { text: string }) => block.text)

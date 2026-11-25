@@ -12,12 +12,11 @@ export default async function FlightsPage() {
   const user = await requireUser();
   const supabase = createClient();
 
-  // Visa-linked status: pull the user's in-progress visa applications so we
-  // can warn them if they're searching flights to a country they don't
-  // have a ready visa for yet.
+  // In-progress visa applications power the warning about a missing ready visa.
   const { data: applications } = await supabase
     .from("applications")
     .select("id, status, completion_percent, application_type_id, application_types(destination, display_name, category)")
+    .eq("user_id", user.id)
     .eq("status", "in_progress")
     .order("updated_at", { ascending: false });
 

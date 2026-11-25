@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: "The terms that apply to using UrPassport NG.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

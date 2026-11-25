@@ -21,7 +21,7 @@ export default async function SettingsPage() {
 
   const { data: payments } = await supabase
     .from("payments")
-    .select("id, amount, currency, purpose, status, created_at")
+    .select("id, amount, currency, purpose, status")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(10);

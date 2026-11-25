@@ -23,7 +23,6 @@ interface DbApplicationType {
   visa_subtype: string | null;
   display_name: string;
   document_requirements: DbRequirement[];
-  common_pitfalls: string[] | null;
 }
 
 interface DbApplication {
@@ -92,8 +91,7 @@ export function VisaAssistantClient({
   const existingApp = dbType ? appByKey[`${dbType.id}|${dedicatedType ? "" : selected}`] : undefined;
   const fullData = FULL_DATA[selected];
 
-  // For every country without a fully researched static guide, pull a real,
-  // current visa-requirement status instead of showing generic filler text.
+  // Live requirement status for countries without a researched static guide.
   const [liveData, setLiveData] = useState<VisaLookupResult | null>(null);
   const [liveLoading, setLiveLoading] = useState(false);
 
@@ -104,12 +102,22 @@ export function VisaAssistantClient({
     }
     let cancelled = false;
     setLiveLoading(true);
-    getLiveVisaData(selected).then((result) => {
-      if (!cancelled) {
-        setLiveData(result);
-        setLiveLoading(false);
-      }
-    });
+    getLiveVisaData(selected)
+      .then((result) => {
+        if (!cancelled) {
+          setLiveData(result);
+          setLiveLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setLiveData({
+            available: false,
+            reason: "Couldn't load current requirements. Check the embassy website.",
+          });
+          setLiveLoading(false);
+        }
+      });
     return () => {
       cancelled = true;
     };
@@ -119,15 +127,15 @@ export function VisaAssistantClient({
 
   function handleStart() {
     if (!dbType) return;
-    startTransition(() => {
-      startVisaApplication(dbType.id, dedicatedType ? undefined : selected);
+    startTransition(async () => {
+      await startVisaApplication(dbType.id, dedicatedType ? undefined : selected);
     });
   }
 
   function handleToggle(key: string) {
     if (!existingApp) return;
-    startTransition(() => {
-      toggleVisaChecklistItem(existingApp.id, key);
+    startTransition(async () => {
+      await toggleVisaChecklistItem(existingApp.id, key);
     });
   }
 
@@ -152,7 +160,6 @@ export function VisaAssistantClient({
 
   return (
     <div>
-      {/* Country picker */}
       <div className="bg-panel border border-line rounded-lg p-6 mb-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-display text-lg">Choose a destination</h2>
@@ -201,7 +208,6 @@ export function VisaAssistantClient({
         </p>
       </div>
 
-      {/* Info card */}
       <div ref={resultsRef} className="bg-gradient-to-br from-green-deep to-navy text-white rounded-lg p-6 mb-6 grid grid-cols-2 md:grid-cols-4 gap-5">
         <InfoItem k="Fee" v={info.fee} />
         <InfoItem k="Processing" v={info.processing} />
@@ -280,7 +286,6 @@ export function VisaAssistantClient({
         </div>
       )}
 
-      {/* Eligibility */}
       <div className="bg-panel border border-line rounded-lg p-6 mb-6">
         <h2 className="font-display text-lg mb-4">Eligibility Check</h2>
         {eligibilityQs.map((q, i) => (
@@ -330,7 +335,6 @@ export function VisaAssistantClient({
       </div>
 
       <div className="grid lg:grid-cols-[1.5fr_1fr] gap-5 items-start">
-        {/* Checklist */}
         <div className="bg-panel border border-line rounded-lg p-6">
           <h2 className="font-display text-lg mb-4">Document Checklist</h2>
           {existingApp && dbType ? (
@@ -377,7 +381,6 @@ export function VisaAssistantClient({
           )}
         </div>
 
-        {/* Risks */}
         <div className="bg-panel border border-line rounded-lg p-6">
           <h2 className="font-display text-lg mb-4">Rejection Risk Notes</h2>
           {risks.map((r, i) => (

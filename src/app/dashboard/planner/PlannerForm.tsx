@@ -22,7 +22,7 @@ export function PlannerForm({ remaining, dailyLimit }: { remaining: number; dail
     setError(null);
 
     if (limitReached) {
-      setError(`You've used all ${dailyLimit} AI itineraries for today. Try again in 24 hours.`);
+      setError(`You've reached today's limit of ${dailyLimit} AI itineraries. Try again in 24 hours.`);
       return;
     }
 
@@ -31,12 +31,17 @@ export function PlannerForm({ remaining, dailyLimit }: { remaining: number; dail
       return;
     }
 
+    if (!/^\d+$/.test(budget.trim())) {
+      setError("Enter a budget in Naira using numbers only.");
+      return;
+    }
+
     startTransition(async () => {
       const result = await generateItinerary({
         destination,
         startDate,
         endDate,
-        budgetNgn: Number(budget) || 0,
+        budgetNgn: Number(budget),
         purpose,
       });
       if (result.error) {

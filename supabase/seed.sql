@@ -1,5 +1,6 @@
 -- Seeds application_types with the real content from the checklist docs.
--- Safe to re-run: it clears and re-inserts reference data only (no user data).
+-- Re-run only while no applications reference these rows. The delete below
+-- clears reference data, including any rows added by migration 0004.
 
 delete from application_types;
 

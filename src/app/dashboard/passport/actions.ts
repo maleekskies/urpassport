@@ -60,6 +60,7 @@ export async function toggleChecklistItem(applicationId: string, key: string) {
     .from("applications")
     .select("checklist_state, application_type_id, user_id")
     .eq("id", applicationId)
+    .eq("user_id", user.id)
     .single();
 
   if (fetchError || !app || app.user_id !== user.id) {
@@ -90,7 +91,8 @@ export async function toggleChecklistItem(applicationId: string, key: string) {
       status: completion === 100 ? "on_track" : "in_progress",
       updated_at: new Date().toISOString(),
     })
-    .eq("id", applicationId);
+    .eq("id", applicationId)
+    .eq("user_id", user.id);
 
   if (updateError) throw updateError;
 

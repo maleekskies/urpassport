@@ -6,10 +6,7 @@ import { requireUser } from "@/lib/auth";
 import { getLiveVisaRequirement, type VisaLookupResult } from "@/lib/visaApi";
 import { COUNTRY_CODES, NIGERIA_CODE } from "@/lib/countries";
 
-// Real-time visa requirement lookup for any of the 193 countries that don't
-// have a fully researched static guide. Replaces the old static "generic
-// guidance" fallback, this is live data (cached up to VISA_CACHE_TTL_HOURS),
-// not fabricated content.
+// Live requirement lookup for countries without a researched static guide.
 export async function getLiveVisaData(countryName: string): Promise<VisaLookupResult> {
   await requireUser();
   const supabase = createClient();
@@ -77,6 +74,7 @@ export async function toggleVisaChecklistItem(applicationId: string, key: string
     .from("applications")
     .select("checklist_state, application_type_id, user_id")
     .eq("id", applicationId)
+    .eq("user_id", user.id)
     .single();
 
   if (fetchError || !app || app.user_id !== user.id) {
@@ -107,7 +105,8 @@ export async function toggleVisaChecklistItem(applicationId: string, key: string
       status: completion === 100 ? "on_track" : "in_progress",
       updated_at: new Date().toISOString(),
     })
-    .eq("id", applicationId);
+    .eq("id", applicationId)
+    .eq("user_id", user.id);
 
   if (updateError) throw updateError;
 

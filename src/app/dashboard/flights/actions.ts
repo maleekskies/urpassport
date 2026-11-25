@@ -21,7 +21,7 @@ export async function runFlightSearch(input: FlightSearchInput): Promise<FlightS
     const offers = await searchFlights(input);
     return { offers };
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Flight search failed." };
+    return { error: "Flight search failed. Check your route and dates or try again." };
   }
 }
 

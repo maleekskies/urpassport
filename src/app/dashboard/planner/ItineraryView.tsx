@@ -2,7 +2,7 @@ interface ItineraryDay {
   date: string;
   items: { time: string; title: string; description: string; cost_ngn: number }[];
 }
-interface PlanJson {
+export interface PlanJson {
   days: ItineraryDay[];
   estimated_total_ngn: number;
   packing_reminders: string[];
@@ -45,12 +45,12 @@ export function ItineraryView({
         </div>
       </div>
 
-      {(plan.days || []).map((day, i) => (
+      {(Array.isArray(plan.days) ? plan.days : []).map((day, i) => (
         <div key={i} className="mb-5">
           <div className="font-mono text-xs text-ink-faint uppercase tracking-wide mb-2">
             {day.date}
           </div>
-          {day.items.map((item, j) => (
+          {(Array.isArray(day.items) ? day.items : []).map((item, j) => (
             <div key={j} className="flex gap-4 py-3 border-b border-line last:border-0">
               <div className="font-mono text-xs text-ink-faint w-16 flex-shrink-0 pt-0.5">
                 {item.time}
@@ -69,7 +69,7 @@ export function ItineraryView({
         </div>
       ))}
 
-      {plan.packing_reminders?.length > 0 && (
+      {Array.isArray(plan.packing_reminders) && plan.packing_reminders.length > 0 && (
         <div className="pt-4 border-t border-line">
           <h3 className="font-semibold text-sm mb-2.5">Packing &amp; document reminders</h3>
           {plan.packing_reminders.map((r, i) => (

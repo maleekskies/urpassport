@@ -1,8 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 
-// Server Actions don't get `user` passed down from the page, each one needs
-// its own auth check. Throws if there's no session, which Next.js surfaces
-// as an error boundary rather than silently doing nothing.
+// Server Actions each need their own auth check. Throwing avoids a silent no-op.
 export async function requireUser() {
   const supabase = createClient();
   const {

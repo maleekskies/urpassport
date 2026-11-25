@@ -21,7 +21,7 @@ export function ProfileForm({ email, fullName, phone, hasNinOnFile }: Props) {
     startTransition(async () => {
       const result = await updateProfile(formData);
       if (result.success) {
-        setFeedback({ type: "success", message: "Profile updated." });
+        setFeedback({ type: "success", message: "Your name, phone number and NIN have been saved." });
       } else {
         setFeedback({ type: "error", message: result.error || "Couldn't update your profile." });
       }

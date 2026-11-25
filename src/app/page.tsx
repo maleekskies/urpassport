@@ -13,7 +13,7 @@ export default function LandingPage() {
           </div>
           <div className="hidden md:flex gap-8 text-sm text-ink-soft">
             <a href="#solution">Passport</a>
-            <a href="#destinations">Visas</a>
+            <a href="#solution">Visas</a>
             <a href="#trust">Trust</a>
           </div>
           <div className="flex items-center gap-4">
@@ -32,15 +32,14 @@ export default function LandingPage() {
 
       <section className="max-w-[1180px] mx-auto px-7 py-20">
         <div className="font-mono text-xs tracking-widest uppercase text-green-mid mb-4">
-          One account, every step
+          What you can track
         </div>
         <h1 className="font-display text-4xl md:text-6xl leading-tight max-w-2xl">
-          Everything between &ldquo;I want to travel&rdquo; and{" "}
-          <em className="italic text-green-deep">the boarding gate.</em>
+          Passport, visa documents and trips in one place
         </h1>
         <p className="text-lg text-ink-soft max-w-lg mt-6 mb-8">
-          Your passport, your visa documents, your flights and your itinerary, tracked in one
-          dashboard, built around how Nigerians actually apply, pay, and travel.
+          Track your passport application, visa checklists, flight prices and trip plans in one
+          dashboard.
         </p>
         <div className="flex gap-4 flex-wrap">
           <Link
@@ -63,15 +62,20 @@ export default function LandingPage() {
           <div className="font-mono text-xs tracking-widest uppercase text-gold-soft mb-4">
             The platform
           </div>
-          <h2 className="font-display text-3xl mb-10">Six modules. One dashboard.</h2>
+          <h2 className="font-display text-3xl mb-10">
+            Passport, visas, documents, flights and trips in one dashboard
+          </h2>
           <div className="grid md:grid-cols-3 gap-5">
             {[
-              ["Passport Hub", "The full NIS journey: checklist, NIN-match check, status tracking."],
-              ["Visa Assistant", "Exact document lists for UK, US, Canada and UAE."],
+              ["Passport Hub", "The full NIS journey: checklist, name match check, status tracking."],
+              [
+                "Visa Assistant",
+                "Country checklists for the UK, US, Canada, UAE, France and Ghana, with general guidance elsewhere.",
+              ],
               ["AI Trip Planner", "A day-by-day plan with flights, stays, and reminders attached."],
               ["Flight Search", "Routes from Lagos, Abuja and Port Harcourt, priced in Naira."],
-              ["Document Vault", "Encrypted storage: upload once, reuse everywhere."],
-              ["Dashboard", "Every application and booking, with real progress."],
+              ["Document Vault", "Upload your documents and keep them in one private place."],
+              ["Dashboard", "Every application and held fare, with progress you can see."],
             ].map(([title, desc]) => (
               <div key={title} className="bg-white/5 border border-white/15 rounded-md p-6">
                 <h3 className="text-white font-display text-lg mb-2">{title}</h3>
@@ -84,14 +88,14 @@ export default function LandingPage() {
 
       <section id="trust" className="max-w-[1180px] mx-auto px-7 py-20">
         <div className="font-mono text-xs tracking-widest uppercase text-green-mid mb-4">
-          Why trust it
+          What to expect
         </div>
-        <h2 className="font-display text-3xl mb-10">We point to official sources. We never guess.</h2>
+        <h2 className="font-display text-3xl mb-10">Clear guidance, no promises we cannot keep</h2>
         <div className="grid md:grid-cols-3 gap-8">
           {[
             ["No guaranteed outcomes", "We never promise a visa or a faster passport."],
             ["Versioned, dated content", "Every checklist carries a last-verified date."],
-            ["Your documents, encrypted", "Uploads are stored securely, used only where you choose."],
+            ["Private document storage", "Uploads are kept in a private folder tied to your account."],
           ].map(([title, desc]) => (
             <div key={title} className="border-l-2 border-gold pl-5">
               <h3 className="font-display text-lg mb-2">{title}</h3>

@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -25,9 +25,6 @@ const config: Config = {
         display: ["var(--font-fraunces)", "serif"],
         sans: ["var(--font-inter)", "sans-serif"],
         mono: ["var(--font-space-mono)", "monospace"],
-      },
-      borderRadius: {
-        DEFAULT: "8px",
       },
       spacing: {
         "4.5": "1.125rem",

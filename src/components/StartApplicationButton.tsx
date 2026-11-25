@@ -7,7 +7,7 @@ export function StartApplicationButton({
   action,
   label,
 }: {
-  action: () => Promise<string>;
+  action: () => Promise<unknown>;
   label: string;
 }) {
   const [isPending, startTransition] = useTransition();

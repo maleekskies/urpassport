@@ -21,7 +21,7 @@ interface Booking {
   created_at: string;
 }
 
-// Airports for the 4 "Live Guide" visa destinations, enough to power the
+// Airports for the researched visa destinations, enough to power the
 // visa-linked banner without needing a full IATA-to-country database.
 const AIRPORT_TO_DEST: Record<string, string> = {
   LHR: "UK", LGW: "UK", MAN: "UK", STN: "UK", LTN: "UK",
@@ -50,6 +50,13 @@ function AirportField({
   useEffect(() => {
     setQuery(code);
   }, [code]);
+
+  useEffect(
+    () => () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    },
+    []
+  );
 
   function handleInput(value: string) {
     setQuery(value);
@@ -117,7 +124,7 @@ export function FlightSearchClient({
   const [destination, setDestination] = useState("LHR");
   const [departDate, setDepartDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
-  const [adults] = useState(1);
+  const adults = 1;
   const [offers, setOffers] = useState<FlightOffer[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();

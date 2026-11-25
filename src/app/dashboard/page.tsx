@@ -6,7 +6,7 @@ import type { ApplicationTypeRow } from "@/lib/database.types";
 
 export const metadata: Metadata = {
   title: "Dashboard",
-  description: "Your passport and visa applications in one place.",
+  description: "Track your Nigerian passport renewal and visa applications in one place.",
 };
 
 const STATUS_STYLES: Record<string, string> = {
@@ -72,7 +72,7 @@ export default async function DashboardPage() {
         <div>
           <h1 className="font-display text-2xl md:text-3xl">Welcome back, {firstName}</h1>
           <p className="text-ink-soft text-sm mt-1">
-            Here&rsquo;s where every application and booking stands today.
+            Track the status of each application and document in one place.
           </p>
         </div>
         <Link
@@ -87,7 +87,6 @@ export default async function DashboardPage() {
         <StatCard label="Applications in progress" value={String(activeCount)} icon="▤" />
         <StatCard label="Documents in vault" value={String(documentCount ?? 0)} icon="▥" />
         <StatCard label="Total applications" value={String(applications?.length ?? 0)} icon="◷" />
-        <StatCard label="Account status" value="Active" icon="✓" />
       </div>
 
       <div className="grid lg:grid-cols-[1.6fr_1fr] gap-5 items-start">

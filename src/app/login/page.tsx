@@ -24,10 +24,6 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Created here, not at component top: this runs only on user
-      // interaction, in the browser. Constructing it during render would run
-      // during Next's build-time prerender pass too, with no browser and
-      // no guarantee the env vars are available at that exact moment.
       const supabase = createClient();
 
       if (mode === "forgot") {
@@ -89,16 +85,16 @@ export default function LoginPage() {
         </div>
         <div>
           <h2 className="font-display text-4xl leading-tight max-w-md">
-            One login for every step between here and there.
+            Sign in to track your passport, visa documents, flights and trips.
           </h2>
           <p className="text-white/65 mt-4 max-w-sm">
-            Your passport status, visa documents, flights and itinerary, all under one
-            account, built for how Nigerians actually travel.
+            One account for your passport application, country checklists, document uploads and
+            trip plans.
           </p>
         </div>
         <div className="flex gap-6 font-mono text-[11px] tracking-wide uppercase text-white/50">
-          <span>NIN-Matched</span>
-          <span>Encrypted Vault</span>
+          <span>Name Match Check</span>
+          <span>Private Vault</span>
           <span>Paystack Secured</span>
         </div>
       </div>
@@ -229,7 +225,11 @@ export default function LoginPage() {
               className="w-full bg-green-deep hover:bg-green-mid transition-colors text-white font-bold py-3.5 rounded-md text-sm disabled:opacity-60"
             >
               {loading
-                ? "Please wait..."
+                ? mode === "signin"
+                  ? "Signing in..."
+                  : mode === "signup"
+                  ? "Creating account..."
+                  : "Sending link..."
                 : mode === "signin"
                 ? "Sign In"
                 : mode === "signup"

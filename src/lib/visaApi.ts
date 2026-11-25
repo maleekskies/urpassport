@@ -1,12 +1,7 @@
-// Live visa-requirements lookups via the Travel Buddy Visa Requirements API
-// (RapidAPI: visa-requirement.p.rapidapi.com). Free tier, 200 passports x
-// 211 destinations, updated daily. Replaces the old "generic guidance"
-// fallback: every non-Live-Guide country now gets real, current data
-// instead of static filler text, and results are cached in
-// `visa_requirements_cache` so repeat lookups don't re-hit the API.
-//
-// If RAPIDAPI_KEY isn't configured, callers get an explicit
-// { available: false } result, never fabricated content standing in for it.
+// Live requirement status via the Travel Buddy API on RapidAPI. Countries
+// without a researched guide also get a general checklist in the UI.
+// Results are cached in visa_requirements_cache. Without RAPIDAPI_KEY,
+// callers get { available: false } rather than invented data.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/database.types";

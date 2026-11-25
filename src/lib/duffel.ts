@@ -1,9 +1,4 @@
-// Duffel Flights API client. Chosen after Amadeus's Self-Service portal was
-// decommissioned (July 2026, no longer available to indie/self-serve
-// developers). Duffel still offers instant self-serve signup with a free
-// test-mode token (duffel_test_...) from Dashboard > Developers > Access
-// Tokens at duffel.com. No SDK, matches this project's convention of
-// calling providers directly via fetch.
+// Duffel Flights API client, called directly via fetch.
 
 const BASE_URL = "https://api.duffel.com";
 const DUFFEL_VERSION = "v2";
@@ -29,9 +24,6 @@ export interface FlightSearchInput {
   adults: number;
 }
 
-// Kept identical to the shape the UI already expects, so FlightSearchClient
-// and the rest of the flights feature didn't need to change when the
-// provider underneath did.
 export interface FlightOffer {
   id: string;
   price: { total: string; currency: string };
@@ -46,14 +38,12 @@ export interface FlightOffer {
   }[];
 }
 
-// Airport/city lookup, so people can type "Lagos" instead of needing to
-// already know "LOS". Uses Duffel's places-suggestions endpoint.
+// Airport and city lookup through Duffel's places suggestions endpoint.
 export interface PlaceSuggestion {
   id: string;
   name: string;
   iataCode: string;
   cityName: string | null;
-  countryName: string | null;
   type: "airport" | "city";
 }
 
@@ -75,7 +65,6 @@ export async function searchPlaces(query: string): Promise<PlaceSuggestion[]> {
       name: p.name as string,
       iataCode: p.iata_code as string,
       cityName: (p.city_name as string) || (p.city?.name as string) || null,
-      countryName: (p.iata_country_code as string) || null,
       type: (p.type === "city" ? "city" : "airport") as "airport" | "city",
     }));
 }

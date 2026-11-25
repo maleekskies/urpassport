@@ -28,7 +28,7 @@ export function createClient() {
           try {
             cookieStore.set({ name, value: "", ...options });
           } catch {
-            // Same as above: safe to ignore outside a Server Action/Route Handler.
+            // Same as above.
           }
         },
       },

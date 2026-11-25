@@ -19,7 +19,7 @@ export function NinChecker() {
     } else {
       setResult({
         match: false,
-        message: "Names don't match exactly. Fix this before submitting: it's the #1 cause of delays.",
+        message: "Names don't match exactly. Use the same spelling and order as your NIN record.",
       });
     }
   }
@@ -33,7 +33,10 @@ export function NinChecker() {
           </label>
           <input
             value={ninName}
-            onChange={(e) => setNinName(e.target.value)}
+            onChange={(e) => {
+              setNinName(e.target.value);
+              setResult(null);
+            }}
             placeholder="e.g. CHIDINMA ADAEZE OKAFOR"
             className="w-full px-3 py-2.5 border border-line rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-mid"
           />
@@ -44,7 +47,10 @@ export function NinChecker() {
           </label>
           <input
             value={appName}
-            onChange={(e) => setAppName(e.target.value)}
+            onChange={(e) => {
+              setAppName(e.target.value);
+              setResult(null);
+            }}
             placeholder="e.g. CHIDINMA ADAEZE OKAFOR"
             className="w-full px-3 py-2.5 border border-line rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-mid"
           />

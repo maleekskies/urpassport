@@ -44,8 +44,6 @@ export async function verifyPayment(reference: string) {
   const user = await requireUser();
   const supabase = createClient();
 
-  const result = await verifyTransaction(reference);
-
   const { data: existing } = await supabase
     .from("payments")
     .select("id, user_id, status")
@@ -55,6 +53,8 @@ export async function verifyPayment(reference: string) {
   if (!existing || existing.user_id !== user.id) {
     throw new Error("Payment record not found.");
   }
+
+  const result = await verifyTransaction(reference);
 
   if (existing.status !== "success") {
     await supabase
@@ -72,10 +72,7 @@ export interface ProfileUpdateResult {
   error?: string;
 }
 
-// Updates the editable fields on the user's profile row.
-// full_name and phone are plain text; NIN is hashed before storage, we never
-// persist the raw NIN, matching the "nothing sent anywhere" spirit of the
-// NIN Match Checker on the Passport Hub.
+// NIN is hashed before storage. The raw value is never persisted.
 export async function updateProfile(formData: FormData): Promise<ProfileUpdateResult> {
   const user = await requireUser();
   const supabase = createClient();
@@ -109,7 +106,7 @@ export async function updateProfile(formData: FormData): Promise<ProfileUpdateRe
   const { error } = await supabase.from("users").update(update).eq("id", user.id);
 
   if (error) {
-    return { success: false, error: "Couldn't save your changes. Please try again." };
+    return { success: false, error: "Couldn't save your profile. Check your entries and try again." };
   }
 
   revalidatePath("/dashboard/settings");

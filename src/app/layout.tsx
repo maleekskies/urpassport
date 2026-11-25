@@ -21,9 +21,9 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
 });
 
-const title = "UrPassport NG: One Stop From Here to There";
+const title = "UrPassport NG | Passport, Visa and Travel Tracker";
 const description =
-  "Passport guidance, visa clarity, flight search and AI trip planning, built for how Nigerians actually travel.";
+  "Track your Nigerian passport application, visa documents, flights and AI trip plans in one place.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

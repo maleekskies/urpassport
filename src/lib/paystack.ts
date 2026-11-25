@@ -1,12 +1,9 @@
-// Paystack integration: server-only. Never expose PAYSTACK_SECRET_KEY to
-// the client; NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY is the only key allowed there
-// (unused server-side, kept for a future client-side inline-checkout option).
+// Paystack integration, server only. Never expose PAYSTACK_SECRET_KEY to the client.
 
 const PAYSTACK_BASE = "https://api.paystack.co";
 
 export interface InitializeResult {
   authorizationUrl: string;
-  accessCode: string;
   reference: string;
 }
 
@@ -44,7 +41,6 @@ export async function initializeTransaction(input: {
 
   return {
     authorizationUrl: json.data.authorization_url,
-    accessCode: json.data.access_code,
     reference: json.data.reference,
   };
 }

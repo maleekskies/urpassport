@@ -14,7 +14,7 @@ export default async function VisaPage() {
 
   const { data: applicationTypes } = await supabase
     .from("application_types")
-    .select("id, destination, visa_subtype, display_name, document_requirements, common_pitfalls")
+    .select("id, destination, visa_subtype, display_name, document_requirements")
     .eq("category", "visa");
 
   const typeIds = (applicationTypes || []).map((t) => t.id);
@@ -31,7 +31,7 @@ export default async function VisaPage() {
       <div className="text-xs font-mono text-ink-faint mb-2">Dashboard / Visa Assistant</div>
       <h1 className="font-display text-2xl mb-1">Visa Assistant</h1>
       <p className="text-ink-soft text-sm mb-6">
-        Pick any country. We&rsquo;ll show you exactly what your case needs.
+        Pick a country to see a document checklist and current entry guidance.
       </p>
       <VisaAssistantClient
         applicationTypes={(applicationTypes as any) || []}

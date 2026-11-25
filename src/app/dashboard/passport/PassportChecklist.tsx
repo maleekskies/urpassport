@@ -22,8 +22,8 @@ export function PassportChecklist({
   const [isPending, startTransition] = useTransition();
 
   function handleToggle(key: string) {
-    startTransition(() => {
-      toggleChecklistItem(applicationId, key);
+    startTransition(async () => {
+      await toggleChecklistItem(applicationId, key);
     });
   }
 

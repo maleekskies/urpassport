@@ -32,10 +32,10 @@ const STATUS_STYLES: Record<string, string> = {
 export function DocumentList({ documents }: { documents: DocRow[] }) {
   const [isPending, startTransition] = useTransition();
 
-  function handleDelete(id: string, filePath: string) {
+  function handleDelete(id: string) {
     if (!confirm("Delete this document?")) return;
-    startTransition(() => {
-      deleteDocument(id, filePath);
+    startTransition(async () => {
+      await deleteDocument(id);
     });
   }
 
@@ -49,7 +49,9 @@ export function DocumentList({ documents }: { documents: DocRow[] }) {
 
   return (
     <div className="grid sm:grid-cols-2 gap-3.5">
-      {documents.map((doc) => (
+      {documents.map((doc) => {
+        const badge = expiryBadge(doc.expiry_date);
+        return (
         <div key={doc.id} className="border border-line rounded-md p-3.5 flex gap-2.5">
           <div className="w-8 h-8 rounded-md bg-green-pale text-green-deep flex items-center justify-center text-sm flex-shrink-0">
             ▤
@@ -66,20 +68,20 @@ export function DocumentList({ documents }: { documents: DocRow[] }) {
               </span>
             </div>
             <div className="text-ink-faint text-xs font-mono mt-0.5">
-              {doc.file_size_bytes ? `${Math.round(doc.file_size_bytes / 1024)} KB` : ""} ·{" "}
+              {doc.file_size_bytes != null ? `${Math.round(doc.file_size_bytes / 1024)} KB` : ""} ·{" "}
               {doc.document_type}
             </div>
-            {expiryBadge(doc.expiry_date) && (
+            {badge && (
               <span
                 className={`inline-block text-[10px] font-bold font-mono uppercase px-2 py-0.5 rounded-full mt-1.5 ${
-                  expiryBadge(doc.expiry_date)!.className
+                  badge.className
                 }`}
               >
-                {expiryBadge(doc.expiry_date)!.label}
+                {badge.label}
               </span>
             )}
             <button
-              onClick={() => handleDelete(doc.id, doc.file_url)}
+              onClick={() => handleDelete(doc.id)}
               disabled={isPending}
               className="text-red text-xs font-semibold mt-2"
             >
@@ -87,7 +89,8 @@ export function DocumentList({ documents }: { documents: DocRow[] }) {
             </button>
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

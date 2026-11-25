@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
 import { PlannerForm } from "./PlannerForm";
-import { ItineraryView } from "./ItineraryView";
+import { ItineraryView, type PlanJson } from "./ItineraryView";
 
 export const metadata: Metadata = {
   title: "AI Trip Planner",
@@ -35,7 +35,7 @@ export default async function PlannerPage() {
       <div className="text-xs font-mono text-ink-faint mb-2">Dashboard / AI Trip Planner</div>
       <h1 className="font-display text-2xl mb-1">AI Trip Planner</h1>
       <p className="text-ink-soft text-sm mb-6">
-        Tell us your trip, we&rsquo;ll build the day-by-day plan with a real AI call.
+        Enter your destination and dates to get a day-by-day plan and packing list.
       </p>
 
       <PlannerForm remaining={remaining} dailyLimit={dailyLimit} />
@@ -53,7 +53,7 @@ export default async function PlannerPage() {
             destination={it.destination}
             startDate={it.start_date}
             endDate={it.end_date}
-            plan={it.plan_json as any}
+            plan={it.plan_json as PlanJson}
           />
         ))}
       </div>

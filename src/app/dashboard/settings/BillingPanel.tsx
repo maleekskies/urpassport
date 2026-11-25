@@ -10,7 +10,6 @@ interface PaymentRow {
   currency: string;
   purpose: string;
   status: string;
-  created_at: string;
 }
 
 export function BillingPanel({
@@ -31,7 +30,7 @@ export function BillingPanel({
         const url = await initializePayment(key);
         window.location.href = url;
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Couldn't start checkout.");
+        setError("Couldn't start checkout. Try again in a moment.");
       }
     });
   }
@@ -39,8 +38,8 @@ export function BillingPanel({
   function handleToggleNotify() {
     const next = !notify;
     setNotify(next);
-    startTransition(() => {
-      setEmailReminders(next);
+    startTransition(async () => {
+      await setEmailReminders(next);
     });
   }
 

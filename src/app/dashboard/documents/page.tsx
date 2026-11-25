@@ -6,7 +6,7 @@ import { DocumentList } from "./DocumentList";
 
 export const metadata: Metadata = {
   title: "Document Vault",
-  description: "Securely store and manage your passport, visa, and travel documents.",
+  description: "Upload and manage your passport, visa and travel documents in one private vault.",
 };
 
 export default async function DocumentsPage() {
@@ -15,7 +15,7 @@ export default async function DocumentsPage() {
 
   const { data: documents } = await supabase
     .from("documents")
-    .select("*")
+    .select("id, document_type, file_url, file_name, file_size_bytes, verification_status, uploaded_at, expiry_date")
     .eq("user_id", user.id)
     .order("uploaded_at", { ascending: false });
 
@@ -28,7 +28,7 @@ export default async function DocumentsPage() {
       <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
         <div>
           <h1 className="font-display text-2xl">Document Vault</h1>
-          <p className="text-ink-soft text-sm mt-1">Upload once, reuse across every application.</p>
+          <p className="text-ink-soft text-sm mt-1">Keep your travel documents in one private place.</p>
         </div>
       </div>
 
@@ -40,7 +40,7 @@ export default async function DocumentsPage() {
             style={{ width: `${Math.min((totalBytes / (1024 * 1024 * 1024)) * 100, 100)}%` }}
           />
         </div>
-        <div className="text-xs font-mono text-ink-faint whitespace-nowrap">of 1 GB</div>
+        <div className="text-xs font-mono text-ink-faint whitespace-nowrap">uploaded</div>
       </div>
 
       <div className="bg-panel border border-line rounded-lg p-6 mb-6">

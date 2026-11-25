@@ -6,24 +6,25 @@ applications, flight search, and trip planning from one account.
 ## What it does
 
 - Passport Hub: tracks a Nigerian passport renewal against a document
-  checklist, plus a client-side NIN match checker that never sends the NIN
-  anywhere.
-- Visa Assistant: covers all 193 countries. Four (UK, US, Canada, UAE) have
-  fully researched guides with a saved, trackable application. The rest pull
-  live visa-requirement status from a third-party API.
+  checklist, plus a name comparison tool that runs in the browser.
+- Visa Assistant: covers all 193 countries. The UK, US, Canada, UAE, France and
+  Ghana have researched guides with saved, trackable applications. Other
+  countries show a general checklist and a live requirement status from a
+  third-party API.
 - Document Vault: private, per-user file storage for travel documents, with
   expiry-date tracking and reminder emails.
-- Flights: real flight search and fare holding via the Amadeus API.
+- Flights: flight search and fare holding via the Duffel API.
 - AI Trip Planner: generates a day-by-day itinerary from a destination,
   dates, and budget.
 - Billing: Paystack checkout for a small set of paid add-ons.
-- Family: manage passport/visa applications on behalf of dependants.
+- Family: manage passport and visa applications on behalf of dependants.
 
 ## Access
 
-Everything past the homepage and login requires a Supabase-authenticated
-account. There is no public API.
+The homepage, login, terms, privacy and auth reset pages are public. Dashboard
+routes require a Supabase-authenticated account. The Paystack webhook and
+expiry reminder cron are provider-only endpoints.
 
-## Contact
+## Disclaimer
 
 Not affiliated with the Nigeria Immigration Service or any government body.

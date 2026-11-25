@@ -1,146 +1,119 @@
 # UrPassport NG: Next.js + Supabase
 
-The real, running codebase (not a mockup). Auth, database, storage,
-live visa data, real flight search, billing, and email reminders are all
-wired to actual providers.
+A dashboard for Nigerians planning a trip. It tracks a passport application, visa checklists, uploaded documents, flight searches and AI trip plans behind one login. Auth, database, storage, visa data, flights, billing and reminders are wired to external providers.
 
-## What's real here
+## Features
 
-- **Auth**: Supabase email/password + Google OAuth, route-protected via
-  `middleware.ts` and a server-side check in `dashboard/layout.tsx`.
-- **Database + RLS**: 12 tables (`supabase/migrations/0001_init.sql` +
-  `0003_upgrades.sql`), every user-owned table locked down with RLS keyed
-  on `auth.uid()`.
-- **Storage**: private `documents` bucket, per-user folder policies.
-- **Dashboard**: real queries against `applications`/`documents`.
-- **Passport Hub**: real saved applications, checklist state, NIN Match
-  Checker (client-side only, nothing ever sent anywhere).
-- **Visa Assistant**: all 193 countries. UK/US/Canada/UAE are "★ Live
-  Guide" (real, saveable applications with fully researched content).
-  France/Ghana are "★ Full Guide" (fully researched, informational only).
-  Every other country now pulls a **live** visa-requirement status from the
-  Travel Buddy Visa Requirements API (via RapidAPI), cached in
-  `visa_requirements_cache`, not static filler text.
-- **Document Vault**: real uploads to Supabase Storage, real delete, now
-  with **expiry-date tracking** per document and visual expiry badges.
-- **AI Trip Planner**: real Anthropic API call, structured JSON, saved to
-  `itineraries`. **Rate-limited** (`AI_PLANNER_DAILY_LIMIT`, default 5/day
-  per user) via `ai_usage_log`.
-- **Flights**: real search against the **Duffel Flights API**
-  (test-mode token by default), with a visa-linked status banner that
-  warns you if you're searching flights to a country you don't have a
-  ready visa for yet. "Hold this fare" saves the offer to `bookings`.
-- **Billing**: real **Paystack** checkout for a small set of paid add-ons
-  (priority document review, full guide unlock, application fast-track).
-  Payment status is confirmed via a signed Paystack webhook
-  (`/api/paystack/webhook`), with the redirect-back callback page as a
-  friendly fallback.
-- **Email reminders**: a cron route (`/api/cron/expiry-reminders`) emails
-  users via **Resend** when a document is within 30 days of its expiry
-  date, respecting a per-user opt-out in Settings.
-- **Family**: manage passport/visa applications on behalf of dependants
-  (`/dashboard/family`), NIN stored the same way as your own (one-way hash).
+- **Auth**: Supabase email/password and Google OAuth, with route protection in `middleware.ts` and a server check in `dashboard/layout.tsx`.
+- **Database and RLS**: 12 tables created by the migrations in `supabase/migrations`, with row level security keyed on `auth.uid()` for user data.
+- **Storage**: private `documents` bucket with per-user folder policies.
+- **Dashboard**: queries against `applications` and `documents`.
+- **Passport Hub**: saved applications, checklist state and a name comparison tool that runs in the browser.
+- **Visa Assistant**: all 193 countries. The UK, US, Canada, UAE, France and Ghana have researched guides and trackable applications. Other countries show a general checklist plus a live requirement status from the Travel Buddy Visa Requirements API via RapidAPI, cached in `visa_requirements_cache`.
+- **Document Vault**: uploads and deletes through Supabase Storage, expiry dates and expiry badges.
+- **AI Trip Planner**: an Anthropic API call returning structured JSON saved to `itineraries`, limited by `AI_PLANNER_DAILY_LIMIT` (default 5 per day) through `ai_usage_log`.
+- **Flights**: search through the Duffel Flights API with a test-mode token by default, plus a visa status banner and a "Hold this fare" action that saves offers to `bookings`.
+- **Billing**: Paystack checkout for a small set of add-ons, confirmed by a signed webhook at `/api/paystack/webhook` with the callback page as a fallback.
+- **Email reminders**: a cron route at `/api/cron/expiry-reminders` sends Resend emails for documents within 30 days of expiry, unless the user opted out in Settings.
+- **Family**: manage applications for dependants at `/dashboard/family`, with NIN values stored as hashes.
 
 ## Setup
 
 ### 1. Install dependencies
+
 ```bash
 npm install
 ```
 
 ### 2. Create a Supabase project
-Go to [supabase.com](https://supabase.com), create a project, grab your
-Project URL, anon key, and **service role key** from **Settings → API**.
-The service role key powers the cron route and the Paystack webhook,
-both run with no user session, so they use it to bypass RLS safely.
 
-### 3. Run the migrations, in order
-1. `supabase/migrations/0001_init.sql`: core schema + RLS + the
-   auth-signup trigger.
-2. `supabase/migrations/0002_storage.sql`: the `documents` Storage bucket.
-3. `supabase/migrations/0003_upgrades.sql`: visa cache, flights/billing
-   support, document expiry, family members, AI rate limiting,
-   notification log.
-4. `supabase/seed.sql`: reference content for `application_types`.
+Go to [supabase.com](https://supabase.com), create a project, and copy the Project URL, anon key and service role key from Settings, API. The service role key is used by the cron route and the Paystack webhook, which run without a user session.
 
-(Supabase CLI: `supabase db push`.)
+### 3. Apply the schema and seed data, in order
+
+1. `supabase/migrations/0001_init.sql`: core schema, RLS and the auth signup trigger.
+2. `supabase/migrations/0002_storage.sql`: the `documents` storage bucket.
+3. `supabase/migrations/0003_upgrades.sql`: visa cache, flights and billing support, document expiry, family members, AI rate limits and notification log.
+4. `supabase/seed.sql`: reference rows for `application_types`.
+5. `supabase/migrations/0004_generic_visa_tracking.sql`: the generic visa type and the France and Ghana rows. Run this after the seed, because the seed clears `application_types`.
+
+With the Supabase CLI: `supabase db push`.
 
 ### 4. Enable Google OAuth (optional)
-**Authentication → Providers** in the Supabase dashboard.
+
+Use Authentication, Providers in the Supabase dashboard.
 
 ### 5. Set up the other providers
-All of these are optional individually, each feature degrades gracefully
-(with an honest error, never fabricated data) if its env vars are missing.
+
+Each provider is optional. A feature reports a specific error if its keys are missing.
 
 | Feature | Provider | Where to get keys |
 |---|---|---|
-| Live visa data | Travel Buddy (RapidAPI) | rapidapi.com, subscribe to "Visa Requirement API", free tier available |
+| Live visa data | Travel Buddy via RapidAPI | rapidapi.com, subscribe to "Travel Buddy - Visa Requirements API", free tier available |
 | Flights | Duffel | duffel.com, free self-serve test-mode token |
-| Billing | Paystack | dashboard.paystack.com, test keys under Settings → API Keys & Webhooks |
-| Email reminders | Resend | resend.com, free tier, verify a sending domain |
+| Billing | Paystack | dashboard.paystack.com, test keys under Settings, API Keys and Webhooks |
+| Email reminders | Resend | resend.com, free tier, verify a sending domain you control |
 
 ### 6. Set environment variables
+
 ```bash
 cp .env.local.example .env.local
 ```
-Fill in what you have. See the table above for what each key unlocks.
+
+Fill in the keys you have. Each key is listed in `.env.local.example` with the feature it unlocks.
 
 ### 7. Run it
+
 ```bash
 npm run dev
 ```
-Open `http://localhost:3000`, sign up, and you'll land on a real Dashboard.
+
+Open `http://localhost:3000` and sign up to reach the dashboard.
 
 ### 8. Wire up the webhook and cron job (production only)
-- Paystack: add `https://yourdomain.com/api/paystack/webhook` under
-  **Settings → API Keys & Webhooks** in the Paystack dashboard.
-- Expiry reminders: `vercel.json` already schedules
-  `/api/cron/expiry-reminders` daily at 07:00 UTC if you deploy to Vercel.
-  Set `CRON_SECRET` in your environment. Vercel Cron sends it
-  automatically as a bearer token. On another host, point any scheduler at
-  that URL with `Authorization: Bearer <CRON_SECRET>`.
+
+- Paystack: add `https://urpassport.vercel.app/api/paystack/webhook` under Settings, API Keys and Webhooks in the Paystack dashboard.
+- Expiry reminders: `vercel.json` schedules `/api/cron/expiry-reminders` daily at 07:00 UTC on Vercel. Set `CRON_SECRET`; Vercel Cron sends it as a bearer token. On another host, point a scheduler at that URL with `Authorization: Bearer <CRON_SECRET>`.
+- Set `NEXT_PUBLIC_APP_URL=https://urpassport.vercel.app` so metadata, sitemap, robots and the Paystack callback use the public host.
 
 ## Project structure
+
 ```
 src/
   app/
-    page.tsx, login/, auth/callback/, auth/reset-password/
+    page.tsx, login/, terms/, privacy/
+    auth/callback/, auth/reset-password/
     not-found.tsx, icon.svg, opengraph-image.tsx, robots.ts, sitemap.ts
     api/
       cron/expiry-reminders/route.ts   # Resend expiry emails
-      paystack/webhook/route.ts         # Payment confirmation
+      paystack/webhook/route.ts        # Payment confirmation
     dashboard/
       layout.tsx, page.tsx
       passport/, visa/, documents/, flights/, planner/, settings/, family/
-  components/                            # AppShell, Sidebar
+  components/                           # AppShell, Sidebar, StartApplicationButton
   lib/
     supabase/{client,server,middleware,service}.ts
-    duffel.ts          # Flight search
-    paystack.ts        # Checkout + webhook verification
-    resend.ts           # Email sending
-    visaApi.ts           # Live visa requirements + caching
-    countries.ts          # Country list, ISO codes, researched guides
-    billing.ts              # Paid add-on price list
-    site.ts                  # Public site URL, used by metadata/sitemap/robots
+    auth.ts
+    duffel.ts         # Flight search
+    paystack.ts       # Checkout and webhook verification
+    resend.ts         # Email sending
+    visaApi.ts        # Live visa requirements and caching
+    countries.ts      # Country list, ISO codes, researched guides
+    billing.ts        # Paid add-on price list
+    site.ts           # Public site URL used by metadata, sitemap and robots
     database.types.ts
 public/
   llms.txt
 supabase/
-  migrations/0001_init.sql, 0002_storage.sql, 0003_upgrades.sql
+  migrations/0001_init.sql, 0002_storage.sql, 0003_upgrades.sql,
+             0004_generic_visa_tracking.sql
   seed.sql
 ```
 
 ## Deploying
-Push to GitHub, import into [Vercel](https://vercel.com), add the env vars
-from `.env.local.example` in the Vercel project settings, and confirm the
-cron job under **Settings → Cron Jobs** once deployed.
 
-## Honest note on what wasn't verified here
-This was written and typechecked (`npx tsc --noEmit` passes clean) in an
-environment without access to Duffel, Paystack, Resend, or RapidAPI, so
-none of those four integrations have been exercised against a live account,
-so the code is correct to the best of careful review against each
-provider's documented API shape, but you're the first to actually run a
-request through them. If a response shape has drifted from what's coded
-here, that's the most likely source of a runtime error, not a structural
-issue.
+Push to GitHub, import into [Vercel](https://vercel.com), add the variables from `.env.local.example` in the Vercel project settings, and confirm the cron job under Settings, Cron Jobs.
+
+## Unverified integrations
+
+Duffel, Paystack, Resend and RapidAPI were not reachable during development, so those four integrations were written against each provider's documented API shape and have not been exercised with live accounts. Check their responses after setup.

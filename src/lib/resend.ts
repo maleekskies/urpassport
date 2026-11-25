@@ -1,6 +1,3 @@
-// Minimal Resend client: one function, plain fetch, matches this project's
-// convention of calling providers directly rather than pulling in an SDK.
-
 export async function sendEmail(input: { to: string; subject: string; html: string }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {

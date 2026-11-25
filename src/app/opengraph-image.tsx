@@ -38,7 +38,7 @@ export default function Image() {
           UrPassport <span style={{ color: "#C9962C", fontWeight: 400, marginLeft: 16 }}>NG</span>
         </div>
         <div style={{ display: "flex", fontSize: 28, color: "#56685B", marginTop: 16 }}>
-          One Stop From Here to There
+          Passport, visa and travel tracking for Nigerians
         </div>
       </div>
     ),

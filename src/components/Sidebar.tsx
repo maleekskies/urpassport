@@ -28,9 +28,9 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = createClient();
 
   async function handleLogout() {
+    const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");
     router.refresh();
@@ -82,6 +82,7 @@ export function Sidebar({
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={onClose}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium mb-0.5 transition-colors
                   ${active ? "bg-navy-soft text-white border-l-2 border-gold pl-2.5" : "text-[#C7CEDD] hover:bg-white/5 hover:text-white"}`}
                 >
@@ -103,7 +104,7 @@ export function Sidebar({
         ))}
 
         <div className="mt-auto pt-5 border-t border-white/10">
-          <Link href="/dashboard/settings" className="flex items-center gap-2.5 px-3 py-2.5">
+          <Link href="/dashboard/settings" onClick={onClose} className="flex items-center gap-2.5 px-3 py-2.5">
             <div className="w-8 h-8 rounded-full bg-gold-soft text-navy flex items-center justify-center font-display font-bold text-xs">
               {initials || "?"}
             </div>

@@ -50,7 +50,11 @@ export async function removeFamilyMember(id: string) {
     throw new Error("Family member not found.");
   }
 
-  const { error } = await supabase.from("family_members").delete().eq("id", id);
+  const { error } = await supabase
+    .from("family_members")
+    .delete()
+    .eq("id", id)
+    .eq("owner_user_id", user.id);
   if (error) throw error;
   revalidatePath("/dashboard/family");
 }

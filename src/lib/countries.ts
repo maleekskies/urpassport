@@ -1,8 +1,6 @@
-// Shared country reference data, used by the Visa Assistant.
-// The 6 destinations in FULL_DATA have real researched content; every other
-// country gets honest general guidance rather than fabricated specifics.
-// Mirrors the static mockup (urpassport-ng-visa-assistant.html) so behavior
-// stays consistent between the two.
+// Shared country reference data for the Visa Assistant. Six destinations have
+// researched guides in FULL_DATA. Other countries use general guidance plus
+// a live requirement status from visaApi.ts.
 
 export const COUNTRIES: string[] = [
   "Afghanistan",
@@ -200,14 +198,6 @@ export const COUNTRIES: string[] = [
   "Zimbabwe"
 ];
 
-export interface EligibilityQuestion {
-  question: string;
-  description: string;
-}
-export interface DocumentItem {
-  label: string;
-  description: string;
-}
 export interface CountryVisaData {
   code: string;
   fee: string;
@@ -224,24 +214,24 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
     "code": "UK",
     "fee": "\u00a3127",
     "processing": "15 days",
-    "wait": "3\u20135 weeks",
+    "wait": "3 to 5 weeks",
     "centre": "Lagos / Abuja (VFS Global)",
     "eligibility": [
       [
         "Are you visiting for tourism, business, family, or a short course only?",
-        "Genuine visitor intent \u2014 no work, no settling, no public funds."
+        "Genuine visitor intent, no work, no settling, no public funds."
       ],
       [
         "Can you show enough funds to cover the whole trip without working?",
         "Bank statements or payslips that clearly support your stated budget."
       ],
       [
-        "Do you have strong reasons to return to Nigeria \u2014 job, family, property?",
+        "Do you have strong reasons to return to Nigeria, job, family, property?",
         "Employment with approved leave, property, or dependants are the strongest evidence."
       ],
       [
         "Is every detail on your form consistent with your supporting documents?",
-        "Same employer name, same dates, same figures \u2014 everywhere."
+        "Same employer name, same dates, same figures, everywhere."
       ]
     ],
     "documents": [
@@ -271,17 +261,17 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
       ]
     ],
     "risks": [
-      "Any mismatch between form and documents \u2014 employer name, dates, travel history.",
-      "Weak or unclear ties to Nigeria \u2014 young, single, unemployed applicants face more scrutiny.",
+      "Any mismatch between form and documents, employer name, dates, travel history.",
+      "Weak or unclear ties to Nigeria, young, single, unemployed applicants face more scrutiny.",
       "Thin or unexplained bank activity in the statement period.",
-      "Visa is valid 6 months from issue \u2014 must be used within that window."
+      "Visa is valid 6 months from issue, must be used within that window."
     ]
   },
   "United States": {
     "code": "US",
     "fee": "$185",
     "processing": "Interview-based",
-    "wait": "7\u201313 months for a slot",
+    "wait": "7 to 13 months for a slot",
     "centre": "Lagos / Abuja (USTravelDocs)",
     "eligibility": [
       [
@@ -293,7 +283,7 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
         "Bank statements or sponsor's financial evidence."
       ],
       [
-        "Do you have strong ties to Nigeria \u2014 job, family, property?",
+        "Do you have strong ties to Nigeria, job, family, property?",
         "The core question behind most refusals under Section 214(b)."
       ],
       [
@@ -328,22 +318,22 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
       ]
     ],
     "risks": [
-      "Interview backlog can run 7\u201313 months \u2014 start the process long before any firm travel date.",
+      "Interview backlog can run 7 to 13 months. Start the process long before any firm travel date.",
       "Any inconsistency between DS-160 and supporting documents is a top refusal driver.",
       "Section 214(b) refusal (failure to show strong home ties) is the most common outcome for first-time applicants.",
-      "Approval rate for Nigerian B1/B2 applicants runs roughly 45% \u2014 go in with realistic expectations."
+      "Approval rate for Nigerian B1/B2 applicants runs roughly 45%. Go in with realistic expectations."
     ]
   },
   "Canada": {
     "code": "CA",
     "fee": "CAD $100 + $85 biometrics",
-    "processing": "6\u201314 weeks after biometrics",
-    "wait": "8\u201316 weeks total",
+    "processing": "6 to 14 weeks after biometrics",
+    "wait": "8 to 16 weeks total",
     "centre": "Lagos / Abuja (VFS Global)",
     "eligibility": [
       [
         "Can you show funds well beyond the bare minimum?",
-        "Nigerian applicants face closer financial scrutiny \u2014 a fuller picture (property, business, investments) helps."
+        "Nigerian applicants face closer financial scrutiny, a fuller picture (property, business, investments) helps."
       ],
       [
         "Do you have strong, documented ties to Nigeria?",
@@ -351,7 +341,7 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
       ],
       [
         "Have you booked your biometrics appointment promptly?",
-        "Slots fill fast \u2014 book immediately after paying."
+        "Slots fill fast. Book immediately after paying."
       ],
       [
         "Have you avoided booking non-refundable flights before approval?",
@@ -386,16 +376,16 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
     ],
     "risks": [
       "Nigerian applicants face elevated financial-proof scrutiny.",
-      "Biometrics appointments fill quickly \u2014 delay in booking adds weeks.",
-      "Total realistic timeline runs 8\u201316 weeks \u2014 apply at least 4 months ahead.",
+      "Biometrics appointments fill quickly. Delay in booking adds weeks.",
+      "Total realistic timeline runs 8 to 16 weeks. Apply at least 4 months ahead.",
       "A medical exam may be required depending on stay length."
     ]
   },
   "United Arab Emirates": {
     "code": "AE",
-    "fee": "$125\u2013$800 (by duration/entry type)",
-    "processing": "3\u201310 days after DVN",
-    "wait": "~1\u20132 weeks total",
+    "fee": "$125 to $800 (by duration/entry type)",
+    "processing": "3 to 10 days after DVN",
+    "wait": "~1 to 2 weeks total",
     "centre": "Document Verification Hub (online) + VFS",
     "eligibility": [
       [
@@ -412,7 +402,7 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
       ],
       [
         "If employed, do you have an NOC from your employer?",
-        "No Objection Certificate \u2014 required for employed applicants."
+        "No Objection Certificate, required for employed applicants."
       ]
     ],
     "documents": [
@@ -426,7 +416,7 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
       ],
       [
         "Document Verification Number (DVN)",
-        "From documentverificationhub.ae \u2014 apply first, before anything else."
+        "From documentverificationhub.ae. Apply first, before anything else."
       ],
       [
         "6-month bank statement",
@@ -442,10 +432,10 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
       ]
     ],
     "risks": [
-      "No visa-on-arrival for Nigerians \u2014 even with a valid US/UK/Schengen/Canada visa.",
+      "No visa-on-arrival for Nigerians. Even with a valid US/UK/Schengen/Canada visa.",
       "Any mismatch between entered travel details and your passport is a top rejection trigger.",
       "Declare cash or instruments above AED 60,000 at customs.",
-      "The DVN step must be completed first \u2014 nothing else can be submitted before it clears."
+      "The DVN step must be completed first. Nothing else can be submitted before it clears."
     ]
   },
   "France": {
@@ -460,12 +450,12 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
         "Mandatory, valid across the whole Schengen zone."
       ],
       [
-        "Can your bank statements support roughly \u20ac50\u2013100/day of your trip?",
+        "Can your bank statements support roughly \u20ac50 to 100/day of your trip?",
         "A commonly cited benchmark for what funds should show."
       ],
       [
         "Do you have a confirmed round-trip flight reservation?",
-        "A verifiable hold is accepted \u2014 you don't need to pay for the ticket yet."
+        "A verifiable hold is accepted. You don't need to pay for the ticket yet."
       ],
       [
         "Do you have proof of accommodation for the whole stay?",
@@ -486,7 +476,7 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
         "Via france-visas.gouv.fr."
       ],
       [
-        "Bank statements \u2014 last 3 months",
+        "Bank statements, last 3 months",
         ""
       ],
       [
@@ -501,8 +491,8 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
     "risks": [
       "Nigerian Schengen applications face closer scrutiny and a meaningfully higher rejection rate.",
       "Never book non-refundable flights or make non-refundable payments before the visa is issued.",
-      "Book your VFS appointment 4\u20138 weeks ahead \u2014 slots fill fast in peak season.",
-      "\"Schengen\" isn't one process \u2014 apply through whichever member country is your main destination."
+      "Book your VFS appointment 4 to 8 weeks ahead. Slots fill fast in peak season.",
+      "\"Schengen\" isn't one process, apply through whichever member country is your main destination."
     ]
   },
   "Ghana": {
@@ -510,7 +500,7 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
     "fee": "Visa-free (ECOWAS)",
     "processing": "N/A",
     "wait": "N/A",
-    "centre": "N/A \u2014 no application needed",
+    "centre": "N/A, no application needed",
     "eligibility": [
       [
         "Do you have a valid Nigerian passport or ECOWAS Travel Certificate?",
@@ -526,7 +516,7 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
       ],
       [
         "Are you transiting through a third country?",
-        "A separate transit visa may still apply \u2014 check that leg separately."
+        "A separate transit visa may still apply. Check that leg separately."
       ]
     ],
     "documents": [
@@ -544,9 +534,9 @@ export const FULL_DATA: Record<string, CountryVisaData> = {
       ]
     ],
     "risks": [
-      "No visa application needed \u2014 Nigerians travel visa-free under ECOWAS for stays up to 90 days.",
+      "No visa application needed. Nigerians travel visa-free under ECOWAS for stays up to 90 days.",
       "Airlines enforce their own passport-validity minimums even where immigration doesn't.",
-      "Flights and applications surge Oct\u2013Dec (Detty December) \u2014 book that window early."
+      "Flights and applications surge Oct to Dec (Detty December), book that window early."
     ]
   }
 };
@@ -569,13 +559,6 @@ export const GENERIC_ELIGIBILITY: [string, string][] = [
   ["Can you show sufficient funds for the trip?", "Bank statements, payslips, or sponsor documents."],
   ["Do you have documented ties to Nigeria?", "Employment, family, or property: evidence you intend to return."],
   ["Is every detail consistent across your application and documents?", "Name spelling, dates, and figures should match everywhere."]
-];
-export const GENERIC_DOCUMENTS: [string, string][] = [
-  ["Valid passport (6+ months)", ""],
-  ["Passport photographs", "Per the destination's own spec."],
-  ["Completed application form", ""],
-  ["Proof of funds", ""],
-  ["Proof of accommodation / itinerary", ""]
 ];
 export const GENERIC_RISKS: string[] = [
   "Document inconsistencies are the most common rejection reason worldwide.",

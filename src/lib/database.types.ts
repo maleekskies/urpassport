@@ -1,4 +1,4 @@
-// Hand-written to match supabase/migrations/0001_init.sql.
+// Hand-written to match the schema created by the migrations in supabase/migrations.
 // If you have the Supabase CLI set up, you can replace this with a generated
 // version: `supabase gen types typescript --local > src/lib/database.types.ts`
 //
@@ -371,6 +371,4 @@ export interface Database {
   };
 }
 
-export type ApplicationRow = Database["public"]["Tables"]["applications"]["Row"];
 export type ApplicationTypeRow = Database["public"]["Tables"]["application_types"]["Row"];
-export type DocumentRow = Database["public"]["Tables"]["documents"]["Row"];

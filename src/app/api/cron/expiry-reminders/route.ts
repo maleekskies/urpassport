@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { sendEmail } from "@/lib/resend";
 
-// Scheduled route: point a daily cron (Vercel Cron, Supabase Cron, GitHub
-// Actions, etc.) at this URL with `Authorization: Bearer <CRON_SECRET>`.
-// Vercel Cron example (vercel.json):
-//   { "crons": [{ "path": "/api/cron/expiry-reminders", "schedule": "0 7 * * *" }] }
+// Scheduled route. The caller sends the shared secret as a bearer token.
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
   const auth = req.headers.get("authorization");
@@ -40,17 +37,22 @@ export async function GET(req: NextRequest) {
     const daysLeft = Math.ceil(
       (new Date(doc.expiry_date as string).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
     );
-    const subject =
+    const expiryText =
       daysLeft < 0
-        ? `${doc.file_name} has expired`
-        : `${doc.file_name} expires in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`;
+        ? "has expired"
+        : daysLeft === 0
+        ? "expires today"
+        : `expires in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`;
+    const subject = `${doc.file_name} ${expiryText}`;
+    const safeName = doc.file_name.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+    const safeOwner = (owner.full_name || "there").replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
     try {
       await sendEmail({
         to: owner.email,
         subject,
-        html: `<p>Hi ${owner.full_name || "there"},</p>
-<p><strong>${doc.file_name}</strong> ${daysLeft < 0 ? "expired on" : "expires on"} ${doc.expiry_date}.
+        html: `<p>Hi ${safeOwner},</p>
+<p><strong>${safeName}</strong> ${daysLeft < 0 ? "expired on" : "expires on"} ${doc.expiry_date}.
 Log in to UrPassport NG and renew or replace it in your Document Vault.</p>`,
       });
 

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "What UrPassport NG collects, why, and who it's shared with.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {
@@ -28,9 +29,8 @@ export default function PrivacyPage() {
             <ul className="list-disc pl-5 space-y-1.5">
               <li>Account info: email, full name, phone number.</li>
               <li>
-                Your NIN: never stored in readable form. We store a one-way hash of it, used only
-                to power the NIN Match Checker. The hash can&rsquo;t be reversed back into your
-                actual NIN.
+                Your NIN: stored as a SHA-256 hash, not the number itself. The name comparison on
+                the Passport Hub runs in your browser and does not send your NIN anywhere.
               </li>
               <li>
                 Documents you upload to the Document Vault: stored privately, accessible only to
