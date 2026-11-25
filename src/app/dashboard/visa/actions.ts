@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { requireUser } from "@/lib/auth";
 import { getLiveVisaRequirement, type VisaLookupResult } from "@/lib/visaApi";
 import { COUNTRY_CODES, NIGERIA_CODE } from "@/lib/countries";
@@ -9,12 +10,16 @@ import { COUNTRY_CODES, NIGERIA_CODE } from "@/lib/countries";
 // Live requirement lookup for countries without a researched static guide.
 export async function getLiveVisaData(countryName: string): Promise<VisaLookupResult> {
   await requireUser();
-  const supabase = createClient();
   const destCode = COUNTRY_CODES[countryName];
   if (!destCode) {
     return { available: false, reason: "Unrecognized country." };
   }
-  return getLiveVisaRequirement(supabase, NIGERIA_CODE, destCode);
+  try {
+    const supabase = createServiceClient();
+    return await getLiveVisaRequirement(supabase, NIGERIA_CODE, destCode);
+  } catch {
+    return { available: false, reason: "Visa cache service isn't configured." };
+  }
 }
 
 export async function startVisaApplication(applicationTypeId: string, destinationCountry?: string) {

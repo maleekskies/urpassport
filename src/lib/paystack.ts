@@ -32,6 +32,7 @@ export async function initializeTransaction(input: {
       callback_url: input.callbackUrl,
       metadata: input.metadata || {},
     }),
+    signal: AbortSignal.timeout(15000),
   });
 
   const json = await res.json();
@@ -61,6 +62,7 @@ export async function verifyTransaction(reference: string): Promise<VerifyResult
 
   const res = await fetch(`${PAYSTACK_BASE}/transaction/verify/${encodeURIComponent(reference)}`, {
     headers: { Authorization: `Bearer ${secretKey}` },
+    signal: AbortSignal.timeout(15000),
   });
   const json = await res.json();
   if (!res.ok || !json.status) {

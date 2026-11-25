@@ -47,7 +47,7 @@ export default function PrivacyPage() {
             <p>We use a small number of external services to make the app work:</p>
             <ul className="list-disc pl-5 space-y-1.5 mt-2">
               <li>Supabase: hosts our database, authentication, and file storage.</li>
-              <li>Anthropic: powers the AI Trip Planner. Trip details you enter are sent to generate your itinerary.</li>
+              <li>Groq: powers the AI Trip Planner. Trip details you enter are sent to generate your itinerary.</li>
               <li>Duffel: powers flight search. Your search criteria (route, dates) are sent to return live fares.</li>
               <li>Paystack: processes payments for paid add-ons.</li>
               <li>Resend: sends document/visa expiry reminder emails, if you have those enabled.</li>

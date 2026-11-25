@@ -18,7 +18,9 @@ export async function GET(req: NextRequest) {
     .select("id, file_name, expiry_date, user_id, users(email, full_name, notify_email)")
     .is("reminder_sent_at", null)
     .not("expiry_date", "is", null)
-    .lte("expiry_date", in30Days);
+    .lte("expiry_date", in30Days)
+    .order("expiry_date", { ascending: true })
+    .limit(100);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -26,6 +28,7 @@ export async function GET(req: NextRequest) {
 
   let sent = 0;
   let skipped = 0;
+  let failed = 0;
 
   for (const doc of documents || []) {
     const owner = (doc as any).users as { email: string; full_name: string; notify_email: boolean } | null;
@@ -56,19 +59,31 @@ export async function GET(req: NextRequest) {
 Log in to UrPassport NG and renew or replace it in your Document Vault.</p>`,
       });
 
-      await supabase.from("documents").update({ reminder_sent_at: new Date().toISOString() }).eq("id", doc.id);
-      await supabase.from("notification_log").insert({
+      const { error: updateError } = await supabase
+        .from("documents")
+        .update({ reminder_sent_at: new Date().toISOString() })
+        .eq("id", doc.id)
+        .eq("user_id", doc.user_id);
+
+      if (updateError) {
+        failed++;
+        continue;
+      }
+
+      const { error: logError } = await supabase.from("notification_log").insert({
         user_id: doc.user_id,
         channel: "email",
         subject,
         related_type: "document",
         related_id: doc.id,
       });
+
+      if (logError) failed++;
       sent++;
     } catch {
       skipped++;
     }
   }
 
-  return NextResponse.json({ checked: documents?.length || 0, sent, skipped });
+  return NextResponse.json({ checked: documents?.length || 0, sent, skipped, failed });
 }

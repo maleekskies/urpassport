@@ -11,7 +11,7 @@ A dashboard for Nigerians planning a trip. It tracks a passport application, vis
 - **Passport Hub**: saved applications, checklist state and a name comparison tool that runs in the browser.
 - **Visa Assistant**: all 193 countries. The UK, US, Canada, UAE, France and Ghana have researched guides and trackable applications. Other countries show a general checklist plus a live requirement status from the Travel Buddy Visa Requirements API via RapidAPI, cached in `visa_requirements_cache`.
 - **Document Vault**: uploads and deletes through Supabase Storage, expiry dates and expiry badges.
-- **AI Trip Planner**: an Anthropic API call returning structured JSON saved to `itineraries`, limited by `AI_PLANNER_DAILY_LIMIT` (default 5 per day) through `ai_usage_log`.
+- **AI Trip Planner**: a Groq API call on the free tier returning structured JSON saved to `itineraries`, limited by `AI_PLANNER_DAILY_LIMIT` (default 5 per day) through an atomic Postgres function.
 - **Flights**: search through the Duffel Flights API with a test-mode token by default, plus a visa status banner and a "Hold this fare" action that saves offers to `bookings`.
 - **Billing**: Paystack checkout for a small set of add-ons, confirmed by a signed webhook at `/api/paystack/webhook` with the callback page as a fallback.
 - **Email reminders**: a cron route at `/api/cron/expiry-reminders` sends Resend emails for documents within 30 days of expiry, unless the user opted out in Settings.
@@ -27,7 +27,7 @@ npm install
 
 ### 2. Create a Supabase project
 
-Go to [supabase.com](https://supabase.com), create a project, and copy the Project URL, anon key and service role key from Settings, API. The service role key is used by the cron route and the Paystack webhook, which run without a user session.
+Go to [supabase.com](https://supabase.com), create a project, and copy the Project URL, anon key and service role key from Settings, API. The service role key is used by the cron route, the Paystack webhook and visa cache writes, which run without a user session.
 
 ### 3. Apply the schema and seed data, in order
 
@@ -36,6 +36,7 @@ Go to [supabase.com](https://supabase.com), create a project, and copy the Proje
 3. `supabase/migrations/0003_upgrades.sql`: visa cache, flights and billing support, document expiry, family members, AI rate limits and notification log.
 4. `supabase/seed.sql`: reference rows for `application_types`.
 5. `supabase/migrations/0004_generic_visa_tracking.sql`: the generic visa type and the France and Ghana rows. Run this after the seed, because the seed clears `application_types`.
+6. `supabase/migrations/0005_scaling.sql`: query indexes, read-only visa cache policies and the atomic planner limit function.
 
 With the Supabase CLI: `supabase db push`.
 
@@ -49,6 +50,7 @@ Each provider is optional. A feature reports a specific error if its keys are mi
 
 | Feature | Provider | Where to get keys |
 |---|---|---|
+| AI planner | Groq | console.groq.com, free tier, copy an API key |
 | Live visa data | Travel Buddy via RapidAPI | rapidapi.com, subscribe to "Travel Buddy - Visa Requirements API", free tier available |
 | Flights | Duffel | duffel.com, free self-serve test-mode token |
 | Billing | Paystack | dashboard.paystack.com, test keys under Settings, API Keys and Webhooks |
@@ -106,7 +108,7 @@ public/
   llms.txt
 supabase/
   migrations/0001_init.sql, 0002_storage.sql, 0003_upgrades.sql,
-             0004_generic_visa_tracking.sql
+             0004_generic_visa_tracking.sql, 0005_scaling.sql
   seed.sql
 ```
 
@@ -116,4 +118,4 @@ Push to GitHub, import into [Vercel](https://vercel.com), add the variables from
 
 ## Unverified integrations
 
-Duffel, Paystack, Resend and RapidAPI were not reachable during development, so those four integrations were written against each provider's documented API shape and have not been exercised with live accounts. Check their responses after setup.
+Groq, Duffel, Paystack, Resend and RapidAPI were not reachable during development, so those integrations were written against each provider's documented API shape and have not been exercised with live accounts. Check their responses after setup.

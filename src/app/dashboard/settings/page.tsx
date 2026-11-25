@@ -27,7 +27,7 @@ export default async function SettingsPage() {
     .limit(10);
 
   const integrations = [
-    { name: "AI Trip Planner", provider: "Anthropic", configured: !!process.env.ANTHROPIC_API_KEY },
+    { name: "AI Trip Planner", provider: "Groq", configured: !!process.env.GROQ_API_KEY },
     { name: "Flights", provider: "Duffel", configured: !!process.env.DUFFEL_ACCESS_TOKEN },
     { name: "Billing", provider: "Paystack", configured: !!process.env.PAYSTACK_SECRET_KEY },
     { name: "Email reminders", provider: "Resend", configured: !!process.env.RESEND_API_KEY },

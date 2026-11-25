@@ -26,23 +26,11 @@ export async function generateItinerary(input: GenerateInput): Promise<GenerateR
   const user = await requireUser();
   const supabase = createClient();
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return { error: "AI Trip Planner isn't configured yet (ANTHROPIC_API_KEY missing)." };
+  if (!process.env.GROQ_API_KEY) {
+    return { error: "AI Trip Planner isn't configured yet (GROQ_API_KEY missing)." };
   }
 
-  // Rate limit: prevents one user from running up the Anthropic bill.
   const dailyLimit = Number(process.env.AI_PLANNER_DAILY_LIMIT || 5);
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-  const { count } = await supabase
-    .from("ai_usage_log")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", user.id)
-    .eq("feature", "trip_planner")
-    .gte("created_at", since);
-
-  if ((count || 0) >= dailyLimit) {
-    return { error: `You've reached today's limit of ${dailyLimit} AI itineraries. Try again in 24 hours.` };
-  }
 
   if (new Date(input.endDate).getTime() <= new Date(input.startDate).getTime()) {
     return { error: "End date must be after start date." };
@@ -72,16 +60,15 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
 
   let response: Response;
   try {
-    response = await fetch("https://api.anthropic.com/v1/messages", {
+    response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL || "claude-sonnet-5",
-        max_tokens: 4096,
+        model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+        max_completion_tokens: 4096,
         messages: [{ role: "user", content: prompt }],
       }),
       signal: AbortSignal.timeout(60000),
@@ -107,10 +94,7 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
   } catch {
     return { error: "The AI response couldn't be read. Try again." };
   }
-  const rawText: string = data.content
-    .filter((block: { type: string }) => block.type === "text")
-    .map((block: { text: string }) => block.text)
-    .join("\n");
+  const rawText: string = data.choices?.[0]?.message?.content || "";
 
   let planJson: unknown;
   try {
@@ -118,6 +102,16 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
     planJson = JSON.parse(cleaned);
   } catch {
     return { error: "The AI response wasn't valid JSON. Try again." };
+  }
+
+  const { data: allowed, error: limitError } = await supabase.rpc("try_reserve_ai_plan", {
+    p_user: user.id,
+    p_limit: dailyLimit,
+  });
+
+  if (limitError) return { error: limitError.message };
+  if (!allowed) {
+    return { error: `You've reached today's limit of ${dailyLimit} AI itineraries. Try again in 24 hours.` };
   }
 
   const { data: itinerary, error } = await supabase
@@ -130,14 +124,12 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
       budget_ngn: input.budgetNgn,
       purpose: input.purpose,
       plan_json: planJson,
-      ai_model_version: process.env.ANTHROPIC_MODEL || "claude-sonnet-5",
+      ai_model_version: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
     })
     .select("id")
     .single();
 
   if (error) return { error: error.message };
-
-  await supabase.from("ai_usage_log").insert({ user_id: user.id, feature: "trip_planner" });
 
   revalidatePath("/dashboard/planner");
   return { itineraryId: itinerary.id };
