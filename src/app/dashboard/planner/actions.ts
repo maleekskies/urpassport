@@ -67,7 +67,7 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
         Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+        model: process.env.GROQ_MODEL || "openai/gpt-oss-20b",
         max_completion_tokens: 4096,
         messages: [{ role: "user", content: prompt }],
       }),
@@ -124,7 +124,7 @@ Keep costs realistic in Naira. Include 3-5 items per day. Packing reminders shou
       budget_ngn: input.budgetNgn,
       purpose: input.purpose,
       plan_json: planJson,
-      ai_model_version: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+      ai_model_version: process.env.GROQ_MODEL || "openai/gpt-oss-20b",
     })
     .select("id")
     .single();
